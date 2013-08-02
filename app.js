@@ -33,6 +33,8 @@ var REPORT_INTERVAL_ID;
 //maximum attempts to try to write to a busy buffer
 var MAX_ATTEMPTS = 5;
 
+var IMAGE_FILEPATH = __dirname + '/images/';
+
 //instantiate the Johnny-Five board object
 var board = new five.Board();
 
@@ -49,7 +51,6 @@ socket.on('connect', function() {
 
     	loadImports();
 
-    	console.log("FREQ: "+ FREQ);
     	report();
     });
 });
@@ -114,6 +115,7 @@ function loadImports(){
 	    			//create the sensor buffer
 	    			buffer.imports[i] = {
 	    				name: _import.name,
+	    				type: _import.type,
 	    				values: [] 
 	    			};
 
@@ -143,8 +145,43 @@ function loadImports(){
 	    		default:
 	    			break;
 	    	}
-	    }else if(_import.source == "picam"){
-	    	console.log('raspberry pi camera');
+	    }else if(_import.source == "raspicam"){
+	    	sensor = new five.RaspiCam({
+				freq: 2000,
+				length: 18000,
+				filepath: IMAGE_FILEPATH,
+				mode: 'still'
+			});
+
+			//create the sensor buffer
+			buffer.imports[i] = {
+				name: _import.name,
+				type: _import.type,
+				values: [] 
+			};
+
+			//set up event listeners to read values
+			sensor.on("read", function( err, imagepath ) {
+			    //kill the process if NaN is returned
+			  	if(isNaN(imagepath)){
+			  		process.exit(1);
+			  	}
+
+			  	var attempts = 0;
+
+			  	while(attempts < MAX_ATTEMPTS){
+			  		if(buffer.busy == false){
+			  			buffer.imports[i].values.push( {
+					  		timestamp: new Date().getTime(),
+					  		value: imagepath
+					  	});
+
+			  			attempts = MAX_ATTEMPTS;
+			  		}else{
+			  			attempts++;
+			  		}
+			  	}
+			  });
 	    }
 
 	    var machine_import = {

@@ -9,6 +9,11 @@
       "pin": "A2",
       "range": [0, 1000],
       "freq": 1000
+    },
+    {
+      "name": "roomcam",
+      "type": "H264",
+      "source": "raspicam"
     }
   ],
   "exports": null
