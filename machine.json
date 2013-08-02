@@ -1,0 +1,15 @@
+{
+  "name": "gsapp_1",
+  "server": "http://therrienbarley.com:3000",
+  "imports": [
+    {
+      "name": "photoresistor",
+      "type": "analog",
+      "source": "arduino",
+      "pin": "A2",
+      "range": [0, 1000],
+      "freq": 1000
+    }
+  ],
+  "exports": null
+}
