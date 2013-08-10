@@ -117,8 +117,7 @@ function report(){
 			imports: buffer.imports
 		};
 
-		console.log('report before: ');
-		console.dir(report);
+		
 		
 		socket.emit('report', report, function(){
 			/*
