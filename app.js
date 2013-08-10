@@ -1,7 +1,9 @@
 //module dependencies
 var io = require('socket.io-client')
 	, five = require("johnny-five-plus-raspicam")
-	, extend = require('util')._extend;
+	, extend = require('util')._extend
+	, dl  = require('delivery')
+    , fs  = require('fs');
 
 //load and parse the machine.json config file
 var config = require('./machine');
@@ -26,10 +28,13 @@ var REPORT_INTERVAL_ID;
 //maximum attempts to try to write to a busy buffer
 var MAX_ATTEMPTS = 5;
 
-var IMAGE_FILEPATH = __dirname + '/images/';
+var IMAGE_FILEPATH_NAME = '/images/';
+var IMAGE_FILEPATH = __dirname + IMAGE_FILEPATH_NAME;
 
-//initialize socket globally so other functions can emit events
+//initialize socket and delivery globally so other functions can emit events
 var socket;
+var delivery;
+var DELIVERY_READY = false;//ready flag
 
 
 console.log('\n\n\nINITIALIZING BOARD');
@@ -54,9 +59,25 @@ board.on("ready", function() {
 
 	    //listener for the Louis handshake confirmation
 	    socket.on('confirm', function(confirm){
-	    	console.log('handshake confirmed');
+	    	//set variables sent from Louis server
 	    	machine.id = confirm.id;
 	    	FREQ = confirm.freq;
+	    	console.log('handshake confirmed');
+
+	    	//check if any photo/video imports, if so, initialize delivery for file transfer
+	    	for(var i in config.imports){
+	    		if(i.type == "photo" || i.type == "video"){
+	    			console.log('\n\n\nINITIALIZING DELIVERY');
+	    			delivery = dl.listen( socket );
+					delivery.connect();
+
+					delivery.on('delivery.connect',function(delivery){
+						console.log('delivery ready');
+					    DELIVERY_READY = true;
+					});
+					break;
+	    		}
+	    	}
 
 	    	console.log('\n\n\nINITIALIZING IMPORTS');
 	    	//initialize sensors
@@ -93,6 +114,33 @@ function report(){
 			timestamp: new Date().getTime(),
 			imports: buffer.imports
 		});
+
+		for(var i in buffer.imports){
+			switch(buffer.imports[i].type){
+				case "photo":
+
+					for(var p in buffer.imports[i].values){
+					
+						console.log("\n\n***SENDING PHOTO AT: ");
+						console.log('./' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
+						console.log('\n\n');
+						
+					    delivery.send({
+					    	name: buffer.imports[i].values[p].value,
+					    	path : './' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value;
+					    });
+
+					    delivery.on('send.success',function(file){
+					      console.log('File sent successfully!');
+					    });
+					}
+					break;
+				default:
+					break;
+			}
+
+					
+		}
 
 		for(var i in buffer.imports){
 			buffer.imports[i].values = [];
