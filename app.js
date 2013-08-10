@@ -169,11 +169,12 @@ function initImports(){
 	    	switch(_import.type){
 	    		case "photo":
 			    	sensor = new five.RaspiCam({
-
+			    		mode: _import.mode,
 						freq: _import.freq,
-						length: 18000,
+						encoding: _import.encoding,
+						delay: _import.delay,
 						filepath: IMAGE_FILEPATH,
-						mode: 'still'
+						mode: _import.mode
 					});
 
 					//create the sensor buffer
