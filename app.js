@@ -1,6 +1,6 @@
 //module dependencies
 var io = require('socket.io-client')
-	, five = require("johnny-five")
+	, five = require("johnny-five-plus-raspicam")
 	, extend = require('util')._extend;
 
 //load and parse the machine.json config file
@@ -49,6 +49,7 @@ socket.on('connect', function() {
     	//initialize sensors
     	initImports();
 
+    	//begin the reporting cycle
     	report();
     });
 });
