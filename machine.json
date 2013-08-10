@@ -1,8 +1,8 @@
 {
   "name": "gsapp_1",
   "server": "http://therrienbarley.com:3000",
-  "imports": [
-    {
+  "imports": {
+    "photoresistor": {
       "name": "photoresistor",
       "type": "analog",
       "source": "arduino",
@@ -10,14 +10,15 @@
       "range": [0, 1000],
       "freq": 1000
     },
-    {
+    "roomcam": {
       "name": "roomcam",
-      "type": "H264",
+      "type": "photo",
       "source": "raspicam",
       "mode": "still",
+      "encoding": "jpg",
       "freq": 0,
       "delay": 12000
     }
-  ],
+  },
   "exports": null
 }
