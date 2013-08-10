@@ -286,8 +286,6 @@ function initImports(){
 		    	sensor: sensor
 		    };
 
-		    buffer.imports.push(  );
-
 		    machine.imports.push( machine_import );
 		})();
 	}
