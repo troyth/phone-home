@@ -9,15 +9,6 @@
       "pin": "A2",
       "range": [0, 1000],
       "freq": 1000
-    },
-    "roomcam": {
-      "name": "roomcam",
-      "type": "photo",
-      "source": "raspicam",
-      "mode": "still",
-      "encoding": "jpg",
-      "freq": 0,
-      "delay": 12000
     }
   },
   "exports": null
