@@ -6,7 +6,8 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "socket.io-client": "*"
+    "socket.io-client": "*",
+    "delivery": "*"
   }
 }
 
