@@ -127,7 +127,7 @@ function report(){
 						
 					    delivery.send({
 					    	name: buffer.imports[i].values[p].value,
-					    	path : './' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value;
+					    	path : './' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value
 					    });
 
 					    delivery.on('send.success',function(file){
