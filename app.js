@@ -16,7 +16,7 @@ machine.imports = [];
 //a buffer to store the sensor values between emissions to the server
 var buffer = {
 	busy: false,
-	imports: []
+	imports: {}
 };
 
 
@@ -121,6 +121,7 @@ function report(){
 		console.dir(report);
 		
 		socket.emit('report', report, function(){
+			/*
 			for(var i in buffer.imports){
 				switch(buffer.imports[i].type){
 					case "photo":
@@ -146,14 +147,14 @@ function report(){
 					default:
 						break;
 				}			
-			}
+			}*/
 
 			console.log('report after callback: ');
 			console.dir(report);
-
+			/*
 			for(var i in buffer.imports){
 				buffer.imports[i].values = [];
-			}
+			}*/
 			buffer.busy = false;
 
 			console.log('just reported!');
