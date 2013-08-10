@@ -208,7 +208,7 @@ function initImports(){
 
 						  	while(attempts < MAX_ATTEMPTS){
 						  		if(buffer.busy == false){
-						  			console.log('pushing value: '+ value + ' into buffer import number: '+ i);
+						  			//console.log('pushing value: '+ value + ' into buffer import number: '+ i);
 
 						  			buffer.imports[i].values.push( {
 								  		timestamp: new Date().getTime(),
