@@ -6,9 +6,6 @@ var io = require('socket.io-client')
 //load and parse the machine.json config file
 var config = require('./machine');
 
-//connect to the Louis server using socket.io
-var socket = io.connect(config.server, {reconnect: true});
-
 //a variable that describes the attributes of the Raspberry Pi that this code is running on
 var machine = {};
 machine.name = config.name;
@@ -34,26 +31,35 @@ var IMAGE_FILEPATH = __dirname + '/images/';
 //instantiate the Johnny-Five board object
 var board = new five.Board();
 
-//listen for the server connection
-socket.on('connect', function() { 
-    console.log('Connected to Louis server! Initializing handshake');
+//once the board is ready, begin the socket io driven boot sequence
+board.on("ready", function() {
 
-    //send configuration as handshake initialization to the Louis server
-    socket.emit('config', config);
+	//connect to the Louis server using socket.io
+	var socket = io.connect(config.server, {reconnect: true});
 
-    //listener for the Louis handshake confirmation
-    socket.on('confirm', function(confirm){
-    	console.log('Handshake confirmed!');
-    	machine.id = confirm.id;
-    	FREQ = confirm.freq;
+	//listen for the server connection
+	socket.on('connect', function() { 
+	    console.log('Connected to Louis server! Initializing handshake');
 
-    	//initialize sensors
-    	setTimeout(function(){initImports(); report();}, 500);
+	    //send configuration as handshake initialization to the Louis server
+	    socket.emit('config', config);
 
-    	//begin the reporting cycle
-    	
-    });
+	    //listener for the Louis handshake confirmation
+	    socket.on('confirm', function(confirm){
+	    	console.log('Handshake confirmed!');
+	    	machine.id = confirm.id;
+	    	FREQ = confirm.freq;
+
+	    	//initialize sensors
+	    	initImports();
+
+	    	//begin the reporting cycle
+	    	report();
+	    });
+	});
 });
+
+	
 
 
 /**
