@@ -119,42 +119,41 @@ function report(){
 
 		
 		
-		socket.emit('report', report, function(){
-			/*
-			for(var i in buffer.imports){
-				switch(buffer.imports[i].type){
-					case "photo":
+		socket.emit('report', report);
 
-						if(DELIVERY_READY == true){
-							for(var p in buffer.imports[i].values){
+		for(var i in buffer.imports){
+			switch(buffer.imports[i].type){
+				case "photo":
+
+					if(DELIVERY_READY == true){
+						for(var p in buffer.imports[i].values){
+						
+							console.log("\n\n***SENDING PHOTO AT: ");
+							console.log('.' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
+							console.log('\n\n');
 							
-								console.log("\n\n***SENDING PHOTO AT: ");
-								console.log('.' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
-								console.log('\n\n');
-								
-							    delivery.send({
-							    	name: buffer.imports[i].values[p].value,
-							    	path : './' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value
-							    });
+						    delivery.send({
+						    	name: buffer.imports[i].values[p].value,
+						    	path : './' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value
+						    });
 
-							    delivery.on('send.success',function(file){
-							      console.log('File sent successfully!');
-							    });
-							}
+						    delivery.on('send.success',function(file){
+						      console.log('File sent successfully!');
+						    });
 						}
-						break;
-					default:
-						break;
-				}			
-			}*/
-			
-			for(var i in buffer.imports){
-				buffer.imports[i].values = [];
-			}
-			buffer.busy = false;
+					}
+					break;
+				default:
+					break;
+			}			
+		}
+		
+		for(var i in buffer.imports){
+			buffer.imports[i].values = [];
+		}
+		buffer.busy = false;
 
-			console.log('just reported!');
-		});
+		console.log('just reported!');
 			
 
 		
