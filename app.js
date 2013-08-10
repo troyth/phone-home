@@ -110,48 +110,61 @@ board.on("ready", function() {
 function report(){
 	REPORT_INTERVAL_ID = setInterval(function(){
 		buffer.busy = true;
-		
-		socket.emit('report', {
+
+		var report = {
 			id: machine.id,
 			timestamp: new Date().getTime(),
 			imports: buffer.imports
+		};
+
+		console.log('report before: ');
+		console.dir(report);
+		
+		socket.emit('report', report, function(){
+			for(var i in buffer.imports){
+				switch(buffer.imports[i].type){
+					case "photo":
+
+						if(DELIVERY_READY == true){
+							for(var p in buffer.imports[i].values){
+							
+								console.log("\n\n***SENDING PHOTO AT: ");
+								console.log('.' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
+								console.log('\n\n');
+								
+							    delivery.send({
+							    	name: buffer.imports[i].values[p].value,
+							    	path : './' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value
+							    });
+
+							    delivery.on('send.success',function(file){
+							      console.log('File sent successfully!');
+							    });
+							}
+						}
+						break;
+					default:
+						break;
+				}			
+			}
+
+			console.log('report after callback: ');
+			console.dir(report);
+
+			for(var i in buffer.imports){
+				buffer.imports[i].values = [];
+			}
+			buffer.busy = false;
+
+			console.log('just reported!');
 		});
 
-		/*
+		console.log('report end: ');
+		console.dir(report);
 
-		for(var i in buffer.imports){
-			switch(buffer.imports[i].type){
-				case "photo":
+			
 
-					if(DELIVERY_READY == true){
-						for(var p in buffer.imports[i].values){
-						
-							console.log("\n\n***SENDING PHOTO AT: ");
-							console.log('.' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
-							console.log('\n\n');
-							
-						    delivery.send({
-						    	name: buffer.imports[i].values[p].value,
-						    	path : './' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value
-						    });
-
-						    delivery.on('send.success',function(file){
-						      console.log('File sent successfully!');
-						    });
-						}
-					}
-					break;
-				default:
-					break;
-			}			
-		}*/
-
-		for(var i in buffer.imports){
-			buffer.imports[i].values = [];
-		}
-		buffer.busy = false;
-
-		console.log('just reported!');
+		
 
 	}, FREQ);
 }
