@@ -117,6 +117,8 @@ function report(){
 			imports: buffer.imports
 		});
 
+		/*
+
 		for(var i in buffer.imports){
 			switch(buffer.imports[i].type){
 				case "photo":
@@ -141,10 +143,8 @@ function report(){
 					break;
 				default:
 					break;
-			}
-
-					
-		}
+			}			
+		}*/
 
 		for(var i in buffer.imports){
 			buffer.imports[i].values = [];
