@@ -28,31 +28,39 @@ var MAX_ATTEMPTS = 5;
 
 var IMAGE_FILEPATH = __dirname + '/images/';
 
+
+console.log('\n\n\nINITIALIZING BOARD');
 //instantiate the Johnny-Five board object
 var board = new five.Board();
 
 //once the board is ready, begin the socket io driven boot sequence
 board.on("ready", function() {
 
+	console.log('board ready');
+	console.log('\n\n\nINITIALIZING CONNECTION TO LOUIS SERVER');
 	//connect to the Louis server using socket.io
 	var socket = io.connect(config.server, {reconnect: true});
 
 	//listen for the server connection
 	socket.on('connect', function() { 
-	    console.log('Connected to Louis server! Initializing handshake');
+	    console.log('connected to Louis server');
+	    console.log('\n\n\nINITIALIZING LOUIS SERVER HANDSHAKE');
 
 	    //send configuration as handshake initialization to the Louis server
 	    socket.emit('config', config);
 
 	    //listener for the Louis handshake confirmation
 	    socket.on('confirm', function(confirm){
-	    	console.log('Handshake confirmed!');
+	    	console.log('handshake confirmed');
 	    	machine.id = confirm.id;
 	    	FREQ = confirm.freq;
 
+	    	console.log('\n\n\nINITIALIZING IMPORTS');
 	    	//initialize sensors
 	    	initImports();
 
+	    	console.log('imports initialized');
+	    	console.log('\n\n\nBEGINNING REPORT CYCLE');
 	    	//begin the reporting cycle
 	    	report();
 	    });
