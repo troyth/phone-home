@@ -116,9 +116,10 @@ function report(){
 **/
 
 function initImports(){
-	for(var i in config.imports){
+	for(var imp in config.imports){
 		//use an anonymous function to give define a new scope for the variable i
 		(function() {
+			var i = imp;
 			var _import = config.imports[i];
 
 		    var sensor;
