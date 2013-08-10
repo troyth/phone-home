@@ -28,6 +28,9 @@ var MAX_ATTEMPTS = 5;
 
 var IMAGE_FILEPATH = __dirname + '/images/';
 
+//initialize socket globally so other functions can emit events
+var socket;
+
 
 console.log('\n\n\nINITIALIZING BOARD');
 //instantiate the Johnny-Five board object
@@ -39,7 +42,7 @@ board.on("ready", function() {
 	console.log('board ready');
 	console.log('\n\n\nINITIALIZING CONNECTION TO LOUIS SERVER');
 	//connect to the Louis server using socket.io
-	var socket = io.connect(config.server, {reconnect: true});
+	socket = io.connect(config.server, {reconnect: true});
 
 	//listen for the server connection
 	socket.on('connect', function() { 
@@ -62,7 +65,10 @@ board.on("ready", function() {
 	    	console.log('imports initialized');
 	    	console.log('\n\n\nBEGINNING REPORT CYCLE');
 	    	//begin the reporting cycle
-	    	report();
+	    	
+	    	setTimeout(function(){
+	    		report();
+	    	}, FREQ);
 	    });
 	});
 });
@@ -79,24 +85,22 @@ board.on("ready", function() {
 *
 **/
 function report(){
-	setTimeout(function(){
-		REPORT_INTERVAL_ID = setInterval(function(){
-			buffer.busy = true;
-			
-			socket.emit('report', {
-				id: machine.id,
-				timestamp: new Date().getTime(),
-				imports: buffer.imports
-			});
+	REPORT_INTERVAL_ID = setInterval(function(){
+		buffer.busy = true;
+		
+		socket.emit('report', {
+			id: machine.id,
+			timestamp: new Date().getTime(),
+			imports: buffer.imports
+		});
 
-			for(var i in buffer.imports){
-				buffer.imports[i].values = [];
-			}
-			buffer.busy = false;
+		for(var i in buffer.imports){
+			buffer.imports[i].values = [];
+		}
+		buffer.busy = false;
 
-			console.log('just reported!');
+		console.log('just reported!');
 
-		}, FREQ);
 	}, FREQ);
 }
 
