@@ -254,24 +254,27 @@ function initImports(){
 						};
 
 						//set up event listeners to read values
-						sensor.on("read", function( err, imagepath ) {
-						    console.log('photo taken with filename: '+ imagepath)
+						sensor.on("read", function( err, filename ) {
+						    console.log('photo taken with filename: '+ filename);
 
 						  	var attempts = 0;
 
+						  	//try to register the photo MAX_ATTEMPTS times or timeout depending on business (semaphore) of buffer
 						  	while(attempts < MAX_ATTEMPTS){
 						  		if(buffer.busy == false){
 						  			buffer.imports[i].values.push( {
 								  		timestamp: new Date().getTime(),
-								  		value: imagepath
+								  		value: filename
 								  	});
+
+								  	console.log('\n\n\nPHOTO FILENAME ADDED TO BUFFER: '+ filename);
 
 						  			attempts = MAX_ATTEMPTS;
 						  		}else{
 						  			attempts++;
 						  		}
 						  	}
-						  });
+						});
 						break;
 					case "video":
 						break;
@@ -287,6 +290,6 @@ function initImports(){
 		    };
 
 		    machine.imports.push( machine_import );
-		})();
-	}
+		})();//end anonymous function
+	}//end master for loop
 }
