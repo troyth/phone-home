@@ -247,8 +247,8 @@ function initImports(){
 						};
 
 						//set up event listeners to read values
-						sensor.on("read", function( err, filename ) {
-						    console.log('photo taken with filename: '+ filename);
+						sensor.on("read", function( err, imagename ) {
+						    console.log('photo taken with filename: '+ imagename);
 
 						  	var attempts = 0;
 
@@ -257,10 +257,10 @@ function initImports(){
 						  		if(buffer.busy == false){
 						  			buffer.imports[i].values.push( {
 								  		timestamp: new Date().getTime(),
-								  		value: filename
+								  		value: imagename
 								  	});
 
-								  	console.log('\n\n\nPHOTO FILENAME ADDED TO BUFFER: '+ filename);
+								  	console.log('\n\n\nPHOTO FILENAME ADDED TO BUFFER: '+ imagename);
 
 						  			attempts = MAX_ATTEMPTS;
 						  		}else{
