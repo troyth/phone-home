@@ -74,6 +74,7 @@ board.on("ready", function() {
 					delivery.on('delivery.connect',function(delivery){
 						console.log('delivery ready');
 					    DELIVERY_READY = true;
+					    delivery = delivery;
 					});
 					break;
 	    		}
@@ -119,20 +120,22 @@ function report(){
 			switch(buffer.imports[i].type){
 				case "photo":
 
-					for(var p in buffer.imports[i].values){
-					
-						console.log("\n\n***SENDING PHOTO AT: ");
-						console.log('./' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
-						console.log('\n\n');
+					if(DELIVERY_READY == true){
+						for(var p in buffer.imports[i].values){
 						
-					    delivery.send({
-					    	name: buffer.imports[i].values[p].value,
-					    	path : './' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value
-					    });
+							console.log("\n\n***SENDING PHOTO AT: ");
+							console.log('./' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
+							console.log('\n\n');
+							
+						    delivery.send({
+						    	name: buffer.imports[i].values[p].value,
+						    	path : './' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value
+						    });
 
-					    delivery.on('send.success',function(file){
-					      console.log('File sent successfully!');
-					    });
+						    delivery.on('send.success',function(file){
+						      console.log('File sent successfully!');
+						    });
+						}
 					}
 					break;
 				default:
