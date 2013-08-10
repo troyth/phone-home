@@ -48,10 +48,10 @@ socket.on('connect', function() {
     	FREQ = confirm.freq;
 
     	//initialize sensors
-    	initImports();
+    	setTimeout(function(){initImports(); report();}, 500);
 
     	//begin the reporting cycle
-    	report();
+    	
     });
 });
 
