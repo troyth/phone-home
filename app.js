@@ -166,42 +166,48 @@ function initImports(){
 	    			break;
 	    	}
 	    }else if(_import.source == "raspicam"){
-	    	sensor = new five.RaspiCam({
-				freq: 2000,
-				length: 18000,
-				filepath: IMAGE_FILEPATH,
-				mode: 'still'
-			});
+	    	switch(_import.type){
+	    		case "photo":
+			    	sensor = new five.RaspiCam({
 
-			//create the sensor buffer
-			buffer.imports[i] = {
-				name: _import.name,
-				type: _import.type,
-				values: [] 
-			};
+						freq: _import.freq,
+						length: 18000,
+						filepath: IMAGE_FILEPATH,
+						mode: 'still'
+					});
 
-			//set up event listeners to read values
-			sensor.on("read", function( err, imagepath ) {
-			    //kill the process if NaN is returned
-			  	if(isNaN(imagepath)){
-			  		process.exit(1);
-			  	}
+					//create the sensor buffer
+					buffer.imports[i] = {
+						name: _import.name,
+						type: _import.type,
+						values: [] 
+					};
 
-			  	var attempts = 0;
+					//set up event listeners to read values
+					sensor.on("read", function( err, imagepath ) {
+					    //kill the process if NaN is returned
+					  	if(isNaN(imagepath)){
+					  		process.exit(1);
+					  	}
 
-			  	while(attempts < MAX_ATTEMPTS){
-			  		if(buffer.busy == false){
-			  			buffer.imports[i].values.push( {
-					  		timestamp: new Date().getTime(),
-					  		value: imagepath
-					  	});
+					  	var attempts = 0;
 
-			  			attempts = MAX_ATTEMPTS;
-			  		}else{
-			  			attempts++;
-			  		}
-			  	}
-			  });
+					  	while(attempts < MAX_ATTEMPTS){
+					  		if(buffer.busy == false){
+					  			buffer.imports[i].values.push( {
+							  		timestamp: new Date().getTime(),
+							  		value: imagepath
+							  	});
+
+					  			attempts = MAX_ATTEMPTS;
+					  		}else{
+					  			attempts++;
+					  		}
+					  	}
+					  });
+					break;
+				case "video":
+					break;
 	    }
 
 	    var machine_import = {
