@@ -117,111 +117,114 @@ function report(){
 
 function initImports(){
 	for(var i in config.imports){
-		var _import = config.imports[i];
+		//use an anonymous function to give define a new scope for the variable i
+		(function() {
+			var _import = config.imports[i];
 
-	    var sensor;
+		    var sensor;
 
-	    if(_import.source == "arduino"){
-	    	switch(_import.type){
-	    		case "analog":
-	    			sensor = new five.Sensor({
-	    				pin: _import.pin,
-	    				freq: _import.freq,
-	    				range: _import.range
-	    			});
+		    if(_import.source == "arduino"){
+		    	switch(_import.type){
+		    		case "analog":
+		    			sensor = new five.Sensor({
+		    				pin: _import.pin,
+		    				freq: _import.freq,
+		    				range: _import.range
+		    			});
 
-	    			//create the sensor buffer
-	    			buffer.imports[i] = {
-	    				name: _import.name,
-	    				type: _import.type,
-	    				values: [] 
-	    			};
+		    			//create the sensor buffer
+		    			buffer.imports[i] = {
+		    				name: _import.name,
+		    				type: _import.type,
+		    				values: [] 
+		    			};
 
-	    			//set up event listeners to read values
-	    			sensor.on("read", function( err, value ) {
-					    //kill the process if NaN is returned
-					  	if(isNaN(value)){
-					  		process.exit(1);
-					  	}
+		    			//set up event listeners to read values
+		    			sensor.on("read", function( err, value ) {
+						    //kill the process if NaN is returned
+						  	if(isNaN(value)){
+						  		process.exit(1);
+						  	}
 
-					  	var attempts = 0;
+						  	var attempts = 0;
 
-					  	while(attempts < MAX_ATTEMPTS){
-					  		if(buffer.busy == false){
-					  			console.log('pushing value: '+ value + 'into buffer import number: '+ i);
+						  	while(attempts < MAX_ATTEMPTS){
+						  		if(buffer.busy == false){
+						  			console.log('pushing value: '+ value + ' into buffer import number: '+ i);
 
-					  			buffer.imports[i].values.push( {
-							  		timestamp: new Date().getTime(),
-							  		value: value
-							  	});
+						  			buffer.imports[i].values.push( {
+								  		timestamp: new Date().getTime(),
+								  		value: value
+								  	});
 
-					  			attempts = MAX_ATTEMPTS;
-					  		}else{
-					  			attempts++;
-					  		}
-					  	}
-					  });
-	    			break;
-	    		default:
-	    			break;
-	    	}
-	    }else if(_import.source == "raspicam"){
-	    	switch(_import.type){
-	    		case "photo":
-			    	sensor = new five.RaspiCam({
-			    		mode: _import.mode,
-						freq: _import.freq,
-						encoding: _import.encoding,
-						delay: _import.delay,
-						filepath: IMAGE_FILEPATH,
-						mode: _import.mode
-					});
+						  			attempts = MAX_ATTEMPTS;
+						  		}else{
+						  			attempts++;
+						  		}
+						  	}
+						  });
+		    			break;
+		    		default:
+		    			break;
+		    	}
+		    }else if(_import.source == "raspicam"){
+		    	switch(_import.type){
+		    		case "photo":
+				    	sensor = new five.RaspiCam({
+				    		mode: _import.mode,
+							freq: _import.freq,
+							encoding: _import.encoding,
+							delay: _import.delay,
+							filepath: IMAGE_FILEPATH,
+							mode: _import.mode
+						});
 
-					//create the sensor buffer
-					buffer.imports[i] = {
-						name: _import.name,
-						type: _import.type,
-						values: [] 
-					};
+						//create the sensor buffer
+						buffer.imports[i] = {
+							name: _import.name,
+							type: _import.type,
+							values: [] 
+						};
 
-					//set up event listeners to read values
-					sensor.on("read", function( err, imagepath ) {
-					    //kill the process if NaN is returned
-					  	if(isNaN(imagepath)){
-					  		process.exit(1);
-					  	}
+						//set up event listeners to read values
+						sensor.on("read", function( err, imagepath ) {
+						    //kill the process if NaN is returned
+						  	if(isNaN(imagepath)){
+						  		process.exit(1);
+						  	}
 
-					  	var attempts = 0;
+						  	var attempts = 0;
 
-					  	while(attempts < MAX_ATTEMPTS){
-					  		if(buffer.busy == false){
-					  			buffer.imports[i].values.push( {
-							  		timestamp: new Date().getTime(),
-							  		value: imagepath
-							  	});
+						  	while(attempts < MAX_ATTEMPTS){
+						  		if(buffer.busy == false){
+						  			buffer.imports[i].values.push( {
+								  		timestamp: new Date().getTime(),
+								  		value: imagepath
+								  	});
 
-					  			attempts = MAX_ATTEMPTS;
-					  		}else{
-					  			attempts++;
-					  		}
-					  	}
-					  });
-					break;
-				case "video":
-					break;
-				default:
-					break;
-			}
-	    }
+						  			attempts = MAX_ATTEMPTS;
+						  		}else{
+						  			attempts++;
+						  		}
+						  	}
+						  });
+						break;
+					case "video":
+						break;
+					default:
+						break;
+				}
+		    }
 
-	    var machine_import = {
-	    	name: _import.name,
-	    	id: i,
-	    	sensor: sensor
-	    };
+		    var machine_import = {
+		    	name: _import.name,
+		    	id: i,
+		    	sensor: sensor
+		    };
 
-	    buffer.imports.push(  );
+		    buffer.imports.push(  );
 
-	    machine.imports.push( machine_import );
+		    machine.imports.push( machine_import );
+		})();
 	}
 }
