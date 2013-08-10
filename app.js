@@ -189,10 +189,7 @@ function initImports(){
 
 						//set up event listeners to read values
 						sensor.on("read", function( err, imagepath ) {
-						    //kill the process if NaN is returned
-						  	if(isNaN(imagepath)){
-						  		process.exit(1);
-						  	}
+						    console.log('photo taken with filename: '+ imagepath)
 
 						  	var attempts = 0;
 
