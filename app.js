@@ -20,6 +20,7 @@ var buffer = {
 	imports: []
 };
 
+
 //reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines - will be set upon confirmation from server
 var FREQ = -1;
 
