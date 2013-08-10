@@ -66,6 +66,7 @@ board.on("ready", function() {
 
 	    	//check if any photo/video imports, if so, initialize delivery for file transfer
 	    	for(var i in config.imports){
+	    		console.log('+++ imports: '+ i);
 	    		if(i.type == "photo" || i.type == "video"){
 	    			console.log('\n\n\nINITIALIZING DELIVERY');
 	    			delivery = dl.listen( socket );
