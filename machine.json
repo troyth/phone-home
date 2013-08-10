@@ -13,7 +13,7 @@
     {
       "name": "roomcam",
       "type": "H264",
-      "source": "raspicam"
+      "source": "raspicam2"
     }
   ],
   "exports": null

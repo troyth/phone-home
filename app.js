@@ -9,7 +9,7 @@ var config = require('./machine');
 //connect to the Louis server using socket.io
 var socket = io.connect(config.server, {reconnect: true});
 
-//a variable that describes the Raspberry Pi that this code is running on
+//a variable that describes the attributes of the Raspberry Pi that this code is running on
 var machine = {};
 machine.name = config.name;
 machine.imports = [];
@@ -17,11 +17,6 @@ machine.imports = [];
 //a buffer to store the sensor values between emissions to the server
 var buffer = {
 	busy: false,
-	imports: []
-};
-
-var temp_buffer = {
-	dirty: false,
 	imports: []
 };
 
@@ -40,16 +35,19 @@ var board = new five.Board();
 
 //listen for the server connection
 socket.on('connect', function() { 
-    console.log('Connected!');
+    console.log('Connected to Louis server! Initializing handshake');
 
+    //send configuration as handshake initialization to the Louis server
     socket.emit('config', config);
 
+    //listener for the Louis handshake confirmation
     socket.on('confirm', function(confirm){
-    	console.log('confirmed!');
+    	console.log('Handshake confirmed!');
     	machine.id = confirm.id;
     	FREQ = confirm.freq;
 
-    	loadImports();
+    	//initialize sensors
+    	initImports();
 
     	report();
     });
@@ -88,7 +86,7 @@ function report(){
 
 /**
 *
-* loadImports
+* initImports
 *
 * Creates the controller objects for each sensor using
 * Johnny-Five and the Raspberry Pi Camera protocols and
@@ -97,7 +95,7 @@ function report(){
 *
 **/
 
-function loadImports(){
+function initImports(){
 	for(var i in config.imports){
 		var _import = config.imports[i];
 
