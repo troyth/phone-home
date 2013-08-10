@@ -125,7 +125,7 @@ function report(){
 						for(var p in buffer.imports[i].values){
 						
 							console.log("\n\n***SENDING PHOTO AT: ");
-							console.log('./' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
+							console.log('.' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
 							console.log('\n\n');
 							
 						    delivery.send({
