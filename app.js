@@ -209,6 +209,9 @@ function initImports(){
 					break;
 				case "video":
 					break;
+				default:
+					break;
+			}
 	    }
 
 	    var machine_import = {
