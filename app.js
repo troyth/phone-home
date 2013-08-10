@@ -148,21 +148,14 @@ function report(){
 						break;
 				}			
 			}*/
-
-			console.log('report after callback: ');
-			console.dir(report);
-			/*
+			
 			for(var i in buffer.imports){
 				buffer.imports[i].values = [];
-			}*/
+			}
 			buffer.busy = false;
 
 			console.log('just reported!');
 		});
-
-		console.log('report end: ');
-		console.dir(report);
-
 			
 
 		
