@@ -267,6 +267,46 @@ function initImports(){
 						  	}
 						});
 						break;
+					case "timelapse":
+						sensor = new five.RaspiCam({
+				    		mode: _import.mode,
+							freq: _import.freq,
+							encoding: _import.encoding,
+							timeout: _import.timeout,
+							filepath: IMAGE_FILEPATH,
+							mode: _import.mode
+						});
+
+						//create the sensor buffer
+						buffer.imports[i] = {
+							name: _import.name,
+							type: _import.type,
+							values: [] 
+						};
+
+						//set up event listeners to read values
+						sensor.on("read", function( err, imagename ) {
+						    console.log('photo taken with filename: '+ imagename);
+
+						  	var attempts = 0;
+
+						  	//try to register the photo MAX_ATTEMPTS times or timeout depending on business (semaphore) of buffer
+						  	while(attempts < MAX_ATTEMPTS){
+						  		if(buffer.busy == false){
+						  			buffer.imports[i].values.push( {
+								  		timestamp: new Date().getTime(),
+								  		value: imagename
+								  	});
+
+								  	console.log('\n\n\nPHOTO FILENAME ADDED TO BUFFER: '+ imagename);
+
+						  			attempts = MAX_ATTEMPTS;
+						  		}else{
+						  			attempts++;
+						  		}
+						  	}
+						});
+						break;
 					case "video":
 						break;
 					default:

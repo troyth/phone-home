@@ -12,7 +12,7 @@
     },
     "roomcam": {
       "name": "roomcam",
-      "type": "photo",
+      "type": "timelapse",
       "source": "raspicam",
       "mode": "still",
       "encoding": "jpg",
