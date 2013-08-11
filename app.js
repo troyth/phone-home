@@ -122,6 +122,7 @@ function report(){
 		socket.emit('report', report);
 
 		for(var i in buffer.imports){
+			console.log('\n------- CHECKING FOR TYPE OF: '+ buffer.imports[i].type);
 			if(buffer.imports[i].type == "photo" || buffer.imports[i].type == "timelapse"){
 				if(DELIVERY_READY == true){
 					for(var p in buffer.imports[i].values){
@@ -242,7 +243,7 @@ function initImports(){
 
 						//set up event listeners to read values
 						sensor.on("read", function( err, imagename ) {
-						    console.log('photo taken with filename: '+ imagename);
+						    console.log('app.js::photo read::photo taken with filename: '+ imagename);
 
 						  	var attempts = 0;
 
@@ -283,7 +284,7 @@ function initImports(){
 
 						//set up event listeners to read values
 						sensor.on("read", function( err, imagename ) {
-						    console.log('photo taken with filename: '+ imagename);
+						    console.log('app.js::timelapse read::photo taken with filename: '+ imagename);
 
 						  	var attempts = 0;
 
