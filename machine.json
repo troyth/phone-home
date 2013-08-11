@@ -16,7 +16,7 @@
       "source": "raspicam",
       "mode": "still",
       "encoding": "jpg",
-      "freq": 3000,
+      "freq": 4000,
       "timeout": 999999999
     }
   },
