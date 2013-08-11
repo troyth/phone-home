@@ -16,7 +16,7 @@
       "source": "raspicam",
       "mode": "still",
       "encoding": "jpg",
-      "freq": 0,
+      "freq": 7000,
       "delay": 12000
     }
   },
