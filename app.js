@@ -66,7 +66,6 @@ board.on("ready", function() {
 
 	    	//check if any photo/video imports, if so, initialize delivery for file transfer
 	    	for(var i in config.imports){
-	    		console.log('+++ imports: '+ config.imports[i].type);
 	    		if(config.imports[i].type == "photo" || config.imports[i].type == "timelapse" || config.imports[i].type == "video"){
 	    			console.log('\n\n\nINITIALIZING DELIVERY');
 	    			delivery = dl.listen( socket );
@@ -123,9 +122,7 @@ function report(){
 
 		for(var i in buffer.imports){
 			if(buffer.imports[i].type == "photo" || buffer.imports[i].type == "timelapse"){
-				console.log('\n------- trying to send');
 				if(DELIVERY_READY == true){
-					console.log('+++++++ delivery ready');
 					for(var p in buffer.imports[i].values){
 					
 						console.log("\n\n***SENDING PHOTO AT: ");
@@ -150,10 +147,7 @@ function report(){
 		}
 		buffer.busy = false;
 
-		console.log('just reported!');
-			
-
-		
+		console.log('+++++++ reported to Louis server\n');
 
 	}, FREQ);
 }
@@ -225,7 +219,7 @@ function initImports(){
 		    }else if(_import.source == "raspicam"){
 		    	switch(_import.type){
 		    		case "photo":
-		    			console.log("-------SETTING UP PHOTO");
+		    			console.log("INITIALIZING PHOTO IMPORT");
 				    	sensor = new five.RaspiCam({
 				    		mode: _import.mode,
 							freq: _import.freq,
@@ -244,8 +238,6 @@ function initImports(){
 
 						//set up event listeners to read values
 						sensor.on("read", function( err, imagename ) {
-						    console.log('app.js::photo read::photo taken with filename: '+ imagename);
-
 						  	var attempts = 0;
 
 						  	//try to register the photo MAX_ATTEMPTS times or timeout depending on business (semaphore) of buffer
@@ -256,17 +248,16 @@ function initImports(){
 								  		value: imagename
 								  	});
 
-								  	console.log('\n\n\nPHOTO FILENAME ADDED TO BUFFER: '+ imagename);
-
 						  			attempts = MAX_ATTEMPTS;
 						  		}else{
 						  			attempts++;
 						  		}
 						  	}
 						});
+						console.log("photo import ready");
 						break;
 					case "timelapse":
-						console.log("-------SETTING UP TIMELAPSE");
+						console.log("INITIALIZING TIMELAPSE IMPORT");
 						sensor = new five.RaspiCam({
 				    		mode: _import.mode,
 							freq: _import.freq,
@@ -305,8 +296,10 @@ function initImports(){
 						  		}
 						  	}
 						});
+						console.log("timelapse import ready");
 						break;
 					case "video":
+						//there's no reason I can think of to include video
 						break;
 					default:
 						break;
