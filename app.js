@@ -122,30 +122,25 @@ function report(){
 		socket.emit('report', report);
 
 		for(var i in buffer.imports){
-			switch(buffer.imports[i].type){
-				case "photo":
-
-					if(DELIVERY_READY == true){
-						for(var p in buffer.imports[i].values){
+			if(buffer.imports[i].type == "photo" || buffer.imports[i].type == "timelapse"){
+				if(DELIVERY_READY == true){
+					for(var p in buffer.imports[i].values){
+					
+						console.log("\n\n***SENDING PHOTO AT: ");
+						console.log('.' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
+						console.log('\n\n');
 						
-							console.log("\n\n***SENDING PHOTO AT: ");
-							console.log('.' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
-							console.log('\n\n');
-							
-						    delivery.send({
-						    	name: buffer.imports[i].values[p].value,
-						    	path : '.' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value
-						    });
+					    delivery.send({
+					    	name: buffer.imports[i].values[p].value,
+					    	path : '.' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value
+					    });
 
-						    delivery.on('send.success',function(file){
-						      console.log('File sent successfully!');
-						    });
-						}
-					}
-					break;
-				default:
-					break;
-			}			
+					    delivery.on('send.success',function(file){
+					      console.log('File sent successfully!');
+					    });
+					}//for each image
+				}//if DELIVERY_READY
+			}//if photo or timelapse			
 		}
 		
 		for(var i in buffer.imports){
@@ -279,14 +274,11 @@ function initImports(){
 							mode: _import.mode
 						});
 
-						console.log('sensor.timeout:'+ sensor.timeout);
-						console.log('_import.timeout:'+ _import.timeout);
-
 						//create the sensor buffer
 						buffer.imports[i] = {
 							name: _import.name,
 							type: _import.type,
-							values: [] 
+							values: []
 						};
 
 						//set up event listeners to read values
