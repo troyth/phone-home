@@ -116,8 +116,7 @@ function report(){
 			imports: buffer.imports
 		};
 
-		
-		
+		//send report to Louis server
 		socket.emit('report', report);
 
 		for(var i in buffer.imports){
