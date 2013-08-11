@@ -280,6 +280,7 @@ function initImports(){
 						});
 
 						console.log('sensor.timeout:'+ sensor.timeout);
+						console.log('_import.timeout:'+ _import.timeout);
 
 						//create the sensor buffer
 						buffer.imports[i] = {
