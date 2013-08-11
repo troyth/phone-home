@@ -122,9 +122,10 @@ function report(){
 		socket.emit('report', report);
 
 		for(var i in buffer.imports){
-			console.log('\n------- CHECKING FOR TYPE OF: '+ buffer.imports[i].type);
 			if(buffer.imports[i].type == "photo" || buffer.imports[i].type == "timelapse"){
+				console.log('\n------- trying to send');
 				if(DELIVERY_READY == true){
+					console.log('+++++++ delivery ready');
 					for(var p in buffer.imports[i].values){
 					
 						console.log("\n\n***SENDING PHOTO AT: ");
