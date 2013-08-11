@@ -18,7 +18,7 @@
       "encoding": "jpg",
       "freq": 7000,
       "delay": 12000,
-      "timeout": 3155692597470
+      "timeout": 999999999
     }
   },
   "exports": null
