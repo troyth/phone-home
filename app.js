@@ -135,7 +135,7 @@ function report(){
 					    });
 
 					    delivery.on('send.success',function(file){
-					      console.log('File sent successfully!');
+					      //console.log('File sent successfully!');
 					    });
 					}//for each image
 				}//if DELIVERY_READY
