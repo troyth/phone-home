@@ -228,6 +228,7 @@ function initImports(){
 		    }else if(_import.source == "raspicam"){
 		    	switch(_import.type){
 		    		case "photo":
+		    			console.log("-------SETTING UP PHOTO");
 				    	sensor = new five.RaspiCam({
 				    		mode: _import.mode,
 							freq: _import.freq,
@@ -268,6 +269,7 @@ function initImports(){
 						});
 						break;
 					case "timelapse":
+						console.log("-------SETTING UP TIMELAPSE");
 						sensor = new five.RaspiCam({
 				    		mode: _import.mode,
 							freq: _import.freq,
@@ -276,6 +278,8 @@ function initImports(){
 							filepath: IMAGE_FILEPATH,
 							mode: _import.mode
 						});
+
+						console.log('sensor.timeout:'+ sensor.timeout);
 
 						//create the sensor buffer
 						buffer.imports[i] = {
