@@ -62,6 +62,13 @@ board.on("ready", function() {
 	    	//set variables sent from Louis server
 	    	machine.id = confirm.id;
 	    	FREQ = confirm.freq;
+
+	    	//TODO: write this to a persistent file
+	    	if(confirm.password){
+	    		machine.password = confirm.password;
+	    		console.log('new password: '+ machine.password);
+	    	}
+
 	    	console.log('handshake confirmed');
 
 	    	//check if any photo/video imports, if so, initialize delivery for file transfer
