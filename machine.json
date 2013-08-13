@@ -1,6 +1,6 @@
 {
   "name": "gsapp_1",
-  "server": "http://therrienbarley.com:3000",
+  "server": "http://api.sitetosite.co:3001",
   "imports": {
     "photoresistor": {
       "name": "photoresistor",
