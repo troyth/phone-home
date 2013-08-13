@@ -213,8 +213,6 @@ function initImports(){
 		    				range: _import.range
 		    			});
 
-		    			sensor.start();
-
 		    			//create the sensor buffer
 		    			buffer.imports[i] = {
 		    				name: _import.name,
@@ -321,6 +319,8 @@ function initImports(){
 							mode: _import.mode,
 							filename: filename
 						});
+
+						sensor.start();
 
 						//create the sensor buffer
 						buffer.imports[i] = {
