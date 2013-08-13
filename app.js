@@ -260,7 +260,7 @@ function initImports(){
 			    			'.' + _import.encoding;
 
 				    	sensor = new five.RaspiCam({
-				    		mode: _import.mode,
+				    		mode: _import.type,
 							freq: _import.freq,
 							encoding: _import.encoding,
 							delay: _import.delay,
