@@ -14,16 +14,6 @@ var machine = {};
 machine.name = config.name;
 machine.imports = [];
 
-//so the server can parse the image filename into useful information
-config.token = STRING_TOKEN;
-config.file_pattern = {
-	"import_name": 1,
-	"type": 2,
-	"timestamp": 3,
-	"offset": 4,
-	"count": 5,
-	"encoding": 6
-};
 
 //a buffer to store the sensor values between emissions to the server
 var buffer = {
@@ -34,6 +24,16 @@ var buffer = {
 var pFILEPATH = "./p";//where the password is stored if it exists
 var STRING_TOKEN = '_';
 
+//so the server can parse the image filename into useful information
+config.token = STRING_TOKEN;
+config.file_pattern = {
+	"import_name": 1,
+	"type": 2,
+	"timestamp": 3,
+	"offset": 4,
+	"count": 5,
+	"encoding": 6
+};
 
 //reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines - will be set upon confirmation from server
 var FREQ = -1;
