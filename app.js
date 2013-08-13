@@ -27,12 +27,12 @@ var STRING_TOKEN = '_';
 //so the server can parse the image filename into useful information
 config.token = STRING_TOKEN;
 config.file_pattern = {
-	"import_name": 1,
-	"type": 2,
-	"timestamp": 3,
-	"offset": 4,
-	"count": 5,
-	"encoding": 6
+	"import_name": 0,
+	"type": 1,
+	"timestamp": 2,
+	"offset": 3,
+	"count": 4,
+	"encoding": 5
 };
 
 //reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines - will be set upon confirmation from server
