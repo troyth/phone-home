@@ -12,6 +12,15 @@ var config = require('./machine');
 var machine = {};
 machine.name = config.name;
 machine.imports = [];
+machine.token = STRING_TOKEN;
+machine.file_pattern = {
+	"machine_name": 1,
+	"type": 2,
+	"timestamp": 3,
+	"offset": 4,
+	"count": 5,
+	"encoding": 6
+};
 
 //a buffer to store the sensor values between emissions to the server
 var buffer = {
@@ -20,6 +29,7 @@ var buffer = {
 };
 
 var pFILEPATH = "./p";//where the password is stored if it exists
+var STRING_TOKEN = '_';
 
 
 //reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines - will be set upon confirmation from server
@@ -241,6 +251,14 @@ function initImports(){
 		    	switch(_import.type){
 		    		case "photo":
 		    			console.log("INITIALIZING PHOTO IMPORT");
+		    			
+		    			var filename = _import.name + STRING_TOKEN + 
+			    			'photo' + STRING_TOKEN + 
+			    			new Date().getTime() + STRING_TOKEN + 
+			    			_import.delay + STRING_TOKEN + 
+			    			'1' + STRING_TOKEN + 
+			    			'.' + _import.encoding;
+
 				    	sensor = new five.RaspiCam({
 				    		mode: _import.mode,
 							freq: _import.freq,
@@ -279,13 +297,23 @@ function initImports(){
 						break;
 					case "timelapse":
 						console.log("INITIALIZING TIMELAPSE IMPORT");
+
+						var filename = _import.name + STRING_TOKEN + 
+							'timelapse' + STRING_TOKEN + 
+							new Date().getTime() + STRING_TOKEN + 
+							_import.freq + STRING_TOKEN + 
+							'%d' + STRING_TOKEN + 
+							'.' + _import.encoding;
+
+
 						sensor = new five.RaspiCam({
 				    		mode: _import.mode,
 							freq: _import.freq,
 							encoding: _import.encoding,
 							timeout: _import.timeout,
 							filepath: IMAGE_FILEPATH,
-							mode: _import.mode
+							mode: _import.mode,
+							filename: filename
 						});
 
 						//create the sensor buffer
