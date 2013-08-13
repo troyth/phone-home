@@ -266,7 +266,6 @@ function initImports(){
 							encoding: _import.encoding,
 							delay: _import.delay,
 							filepath: IMAGE_FILEPATH,
-							mode: _import.mode,
 							lifetime: FREQ * 10//image will be deleted after this time passes
 						});
 
@@ -319,7 +318,6 @@ function initImports(){
 							encoding: _import.encoding,
 							timeout: _import.timeout,
 							filepath: IMAGE_FILEPATH,
-							mode: _import.mode,
 							filename: filename
 						});
 
