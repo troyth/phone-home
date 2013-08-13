@@ -15,7 +15,7 @@ machine.name = config.name;
 machine.imports = [];
 machine.token = STRING_TOKEN;
 machine.file_pattern = {
-	"machine_name": 1,
+	"import_name": 1,
 	"type": 2,
 	"timestamp": 3,
 	"offset": 4,
