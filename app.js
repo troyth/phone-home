@@ -1,7 +1,7 @@
 //module dependencies
 var io = require('socket.io-client')
 	, five = require("johnny-five")
-	, RaspiCam = require("raspicam")
+	, RaspiCam = require("raspicam").RaspiCam
 	, extend = require('util')._extend
 	, dl  = require('delivery')
     , fs  = require('fs');
