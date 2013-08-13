@@ -19,6 +19,8 @@ var buffer = {
 	imports: {}
 };
 
+var pFILEPATH = "./p";//where the password is stored if it exists
+
 
 //reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines - will be set upon confirmation from server
 var FREQ = -1;
@@ -54,6 +56,11 @@ board.on("ready", function() {
 	    console.log('connected to Louis server');
 	    console.log('\n\n\nINITIALIZING LOUIS SERVER HANDSHAKE');
 
+	    if(fs.existsSync(path)){
+	    	config.password = fs.readFileSync(pFILEPATH, {encoding: 'utf8'});
+	    	console.log('fetched password: '+ config.password);
+	    }
+
 	    //send configuration as handshake initialization to the Louis server
 	    socket.emit('config', config);
 
@@ -67,6 +74,9 @@ board.on("ready", function() {
 	    	if(confirm.password){
 	    		machine.password = confirm.password;
 	    		console.log('new password: '+ machine.password);
+	    		fs.writeFile(pFILEPATH, confirm.password, {encoding: 'utf8'}, function(err) {
+				    if(err) console.log("Error: trying to save new password to disc with message: " + err);
+				}); 
 	    	}
 
 	    	console.log('handshake confirmed');
