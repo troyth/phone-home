@@ -309,6 +309,9 @@ function initImports(){
 							'%d' + STRING_TOKEN + 
 							'.' + _import.encoding;
 
+						console.log('\n\n\nRaspiCam:');
+						console.dir(RaspiCam);
+
 
 						sensor = new RaspiCam({
 				    		mode: _import.type,
