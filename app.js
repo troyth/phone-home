@@ -13,8 +13,10 @@ var config = require('./machine');
 var machine = {};
 machine.name = config.name;
 machine.imports = [];
-machine.token = STRING_TOKEN;
-machine.file_pattern = {
+
+//so the server can parse the image filename into useful information
+config.token = STRING_TOKEN;
+config.file_pattern = {
 	"import_name": 1,
 	"type": 2,
 	"timestamp": 3,
