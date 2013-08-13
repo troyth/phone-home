@@ -1,6 +1,7 @@
 //module dependencies
 var io = require('socket.io-client')
-	, five = require("johnny-five-plus-raspicam")
+	, five = require("johnny-five")
+	, RaspiCam = require("raspicam")
 	, extend = require('util')._extend
 	, dl  = require('delivery')
     , fs  = require('fs');
@@ -259,7 +260,7 @@ function initImports(){
 			    			'1' + STRING_TOKEN + 
 			    			'.' + _import.encoding;
 
-				    	sensor = new five.RaspiCam({
+				    	sensor = new RaspiCam({
 				    		mode: _import.type,
 							freq: _import.freq,
 							encoding: _import.encoding,
@@ -307,7 +308,7 @@ function initImports(){
 							'.' + _import.encoding;
 
 
-						sensor = new five.RaspiCam({
+						sensor = new RaspiCam({
 				    		mode: _import.type,
 							freq: _import.freq,
 							encoding: _import.encoding,
