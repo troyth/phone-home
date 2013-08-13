@@ -56,7 +56,7 @@ board.on("ready", function() {
 	    console.log('connected to Louis server');
 	    console.log('\n\n\nINITIALIZING LOUIS SERVER HANDSHAKE');
 
-	    if(fs.existsSync(path)){
+	    if(fs.existsSync(pFILEPATH)){
 	    	config.password = fs.readFileSync(pFILEPATH, {encoding: 'utf8'});
 	    	console.log('fetched password: '+ config.password);
 	    }
@@ -64,8 +64,13 @@ board.on("ready", function() {
 	    //send configuration as handshake initialization to the Louis server
 	    socket.emit('config', config);
 
+	    socket.on('confirm.error', function(err){
+	    	console.log('Handshake error with Louis server of type: ' + err);
+	    	//TODO: implement re-send
+	    });
+
 	    //listener for the Louis handshake confirmation
-	    socket.on('confirm', function(confirm){
+	    socket.on('confirm.success', function(confirm){
 	    	//set variables sent from Louis server
 	    	machine.id = confirm.id;
 	    	FREQ = confirm.freq;
