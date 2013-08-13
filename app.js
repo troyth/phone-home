@@ -213,6 +213,8 @@ function initImports(){
 		    				range: _import.range
 		    			});
 
+		    			sensor.start();
+
 		    			//create the sensor buffer
 		    			buffer.imports[i] = {
 		    				name: _import.name,
@@ -269,6 +271,8 @@ function initImports(){
 							mode: _import.mode,
 							lifetime: FREQ * 10//image will be deleted after this time passes
 						});
+
+						sensor.start();
 
 						//create the sensor buffer
 						buffer.imports[i] = {
