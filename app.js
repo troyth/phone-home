@@ -40,6 +40,8 @@ var FREQ = -1;
 
 var REPORT_INTERVAL_ID;
 
+var TIMELAPSE_TIMEOUT = 20000;//after this time, kill the timelapse and start another one
+
 //maximum attempts to try to write to a busy buffer
 var MAX_ATTEMPTS = 5;
 
@@ -332,12 +334,20 @@ function initImports(){
 				    		mode: _import.type,
 							freq: _import.freq,
 							encoding: _import.encoding,
-							timeout: _import.timeout,
+							timeout: TIMELAPSE_TIMEOUT,
 							filepath: PHOTO_FILEPATH,
 							filename: filename
 						});
 
 						var child_process = sensor.start();
+
+						var interval = setInterval(function(){
+							sensor.start();
+							counter++;
+							if(counter * TIMELAPSE_TIMEOUT > _import.timeout){
+								clearInterval(interval);
+							}
+						}, TIMELAPSE_TIMEOUT);
 
 						console.log('*******\n\n\nSTARTING CHILD PROCESS: '+ child_process + '\n\n');
 						console.dir( child_process.pid );
