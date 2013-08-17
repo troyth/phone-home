@@ -346,6 +346,8 @@ function initImports(){
 						var interval = setInterval(function(){
 							//delete all images
 
+							process.kill( child_process.pid, 'SIGHUP' );
+
 							sensor.start();
 							counter++;
 							if(counter * TIMELAPSE_TIMEOUT > _import.timeout){
