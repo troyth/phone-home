@@ -168,9 +168,24 @@ function report(){
 					    	path : '.' + PHOTO_FILEPATH_NAME + buffer.imports[i].values[p].value
 					    });
 
-					    delivery.on('send.success',function(file){
-					   		console.log('can now delete: ');
-					      	console.dir(file);
+					    var fp;
+
+					    delivery.on('send.start',function(filePackage){
+					    	console.log('\n\nsend.start');
+					      	fp = filePackage;
+					    });
+
+					    delivery.on('send.success',function(uid){
+					   		console.log('can now delete uid: ');
+					      	console.dir(uid);
+
+					      	if(fp.getUID() == uid){
+					      		console.log('should delete from: ');
+					      		console.dir(fp);
+					      	}else{
+					      		console.log('**not the same uid, fp.getUID(): ');
+					      		console.dir( fp.getUID() );
+					      	}
 					    });
 					}//for each photo
 				}//if DELIVERY_READY
