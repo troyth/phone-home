@@ -182,9 +182,9 @@ function report(){
 					    	console.log('send.success with uid: '+ uid);
 
 					    	if(typeof FILE_PACKAGES[ uid ] != 'undefined'){
-					    		fs.unlinkSync(PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
-					    		console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
-					    		FILE_PACKAGES[ uid ] = undefined;
+					    		//fs.unlinkSync(PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
+					    		//console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
+					    		//FILE_PACKAGES[ uid ] = undefined;
 					    	}
 					    });
 					}//for each photo
@@ -341,9 +341,11 @@ function initImports(){
 
 						var child_process = sensor.start();
 
+						var counter = 0;
+
 						var interval = setInterval(function(){
 							//delete all images
-							
+
 							sensor.start();
 							counter++;
 							if(counter * TIMELAPSE_TIMEOUT > _import.timeout){
