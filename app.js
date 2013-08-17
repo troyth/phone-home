@@ -24,7 +24,7 @@ var buffer = {
 var pFILEPATH = "./p";//where the password is stored if it exists
 var STRING_TOKEN = '_';
 
-//so the server can parse the image filename into useful information
+//so the server can parse the photo filename into useful information
 config.token = STRING_TOKEN;
 config.file_pattern = {
 	"import_name": 0,
@@ -43,8 +43,8 @@ var REPORT_INTERVAL_ID;
 //maximum attempts to try to write to a busy buffer
 var MAX_ATTEMPTS = 5;
 
-var IMAGE_FILEPATH_NAME = '/images/';
-var IMAGE_FILEPATH = __dirname + IMAGE_FILEPATH_NAME;
+var PHOTO_FILEPATH_NAME = '/photos/';
+var PHOTO_FILEPATH = __dirname + PHOTO_FILEPATH_NAME;
 
 //initialize socket and delivery globally so other functions can emit events
 var socket;
@@ -160,18 +160,18 @@ function report(){
 					for(var p in buffer.imports[i].values){
 					
 						console.log("\n\n***SENDING PHOTO AT: ");
-						console.log('.' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value);
+						console.log('.' + PHOTO_FILEPATH_NAME + buffer.imports[i].values[p].value);
 						console.log('\n\n');
 						
 					    delivery.send({
 					    	name: buffer.imports[i].values[p].value,
-					    	path : '.' + IMAGE_FILEPATH_NAME + buffer.imports[i].values[p].value
+					    	path : '.' + PHOTO_FILEPATH_NAME + buffer.imports[i].values[p].value
 					    });
 
 					    delivery.on('send.success',function(file){
 					      //console.log('File sent successfully!');
 					    });
-					}//for each image
+					}//for each photo
 				}//if DELIVERY_READY
 			}//if photo or timelapse			
 		}
@@ -267,8 +267,8 @@ function initImports(){
 							freq: _import.freq,
 							encoding: _import.encoding,
 							delay: _import.delay,
-							filepath: IMAGE_FILEPATH,
-							lifetime: FREQ * 10//image will be deleted after this time passes
+							filepath: PHOTO_FILEPATH,
+							lifetime: FREQ * 10//photo will be deleted after this time passes
 						});
 
 						sensor.start();
@@ -281,7 +281,7 @@ function initImports(){
 						};
 
 						//set up event listeners to read values
-						sensor.on("read", function( err, imagename ) {
+						sensor.on("read", function( err, photoname ) {
 						  	var attempts = 0;
 
 						  	//try to register the photo MAX_ATTEMPTS times or timeout depending on business (semaphore) of buffer
@@ -289,7 +289,7 @@ function initImports(){
 						  		if(buffer.busy == false){
 						  			buffer.imports[i].values.push( {
 								  		timestamp: new Date().getTime(),
-								  		value: imagename
+								  		value: photoname
 								  	});
 
 						  			attempts = MAX_ATTEMPTS;
@@ -319,7 +319,7 @@ function initImports(){
 							freq: _import.freq,
 							encoding: _import.encoding,
 							timeout: _import.timeout,
-							filepath: IMAGE_FILEPATH,
+							filepath: PHOTO_FILEPATH,
 							filename: filename
 						});
 
@@ -333,8 +333,8 @@ function initImports(){
 						};
 
 						//set up event listeners to read values
-						sensor.on("read", function( err, imagename ) {
-						    console.log('app.js::timelapse read::photo taken with filename: '+ imagename);
+						sensor.on("read", function( err, photoname ) {
+						    console.log('app.js::timelapse read::photo taken with filename: '+ photoname);
 
 						  	var attempts = 0;
 
@@ -343,10 +343,10 @@ function initImports(){
 						  		if(buffer.busy == false){
 						  			buffer.imports[i].values.push( {
 								  		timestamp: new Date().getTime(),
-								  		value: imagename
+								  		value: photoname
 								  	});
 
-								  	console.log('\n\n\nPHOTO FILENAME ADDED TO BUFFER: '+ imagename);
+								  	console.log('\n\n\nPHOTO FILENAME ADDED TO BUFFER: '+ photoname);
 
 						  			attempts = MAX_ATTEMPTS;
 						  		}else{
