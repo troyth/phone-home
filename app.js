@@ -51,6 +51,9 @@ var socket;
 var delivery;
 var DELIVERY_READY = false;//ready flag
 
+//store all files sent with Delivery.js as FilePackages to be immediately deleted
+var FILE_PACKAGES = [];
+
 
 console.log('\n\n\nINITIALIZING BOARD');
 //instantiate the Johnny-Five board object
@@ -168,24 +171,21 @@ function report(){
 					    	path : '.' + PHOTO_FILEPATH_NAME + buffer.imports[i].values[p].value
 					    });
 
-					    var fp;
-
 					    delivery.on('send.start',function(filePackage){
 					    	console.log('\n\nsend.start');
-					      	fp = filePackage;
+					      	FILE_PACKAGES.push( filePackage );
 					    });
 
 					    delivery.on('send.success',function(uid){
-					   		console.log('can now delete uid: ');
-					      	console.dir(uid);
+					    	console.log('send.success with uid: '+ uid);
 
-					      	if(fp.getUID() == uid){
-					      		console.log('should delete from: ');
-					      		console.dir(fp);
-					      	}else{
-					      		console.log('**not the same uid, fp.getUID(): ');
-					      		console.dir( fp.getUID() );
-					      	}
+					    	for(var f = 0; f < FILE_PACKAGES.length; f++){
+					    		if(FILE_PACKAGES[f].getUID() == uid){
+					    			console.log('found FilePackage to delete: ');
+					    			console.dir( FILE_PACKAGES[f] );
+					    		}
+					    	}
+
 					    });
 					}//for each photo
 				}//if DELIVERY_READY
