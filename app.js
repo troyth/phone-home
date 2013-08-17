@@ -173,22 +173,16 @@ function report(){
 
 					    delivery.on('send.start',function(filePackage){
 					    	console.log('\n\nsend.start');
-					      	FILE_PACKAGES.push( filePackage );
+					      	FILE_PACKAGES[ filePackage.uid ] = filePackage.name;
 					    });
 
 					    delivery.on('send.success',function(uid){
 					    	console.log('send.success with uid: '+ uid);
 
-					    	for(var f = 0; f < FILE_PACKAGES.length; f++){
-					    		if(FILE_PACKAGES[f].uid == uid){
-					    			var name = FILE_PACKAGES[f].name;
-					    			fs.unlinkSync(PHOTO_FILEPATH + FILE_PACKAGES[f].name);
-					    			console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + name);
-
-					    			//remove this FilePackage from the FILE_PACKAGES array
-					    			FILE_PACKAGES.splice(f, 1);
-					    			break;
-					    		}
+					    	if(typeof FILE_PACKAGES[ uid ] != 'undefined'){
+					    		fs.unlinkSync(PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
+					    		console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + name);
+					    		FILE_PACKAGES[ uid ] = null;
 					    	}
 					    });
 					}//for each photo
