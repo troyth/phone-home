@@ -340,7 +340,7 @@ function initImports(){
 						var child_process = sensor.start();
 
 						console.log('*******\n\n\nSTARTING CHILD PROCESS: '+ child_process + '\n\n');
-						console.dir( child_process );
+						console.dir( child_process.pid );
 
 						//create the sensor buffer
 						buffer.imports[i] = {
