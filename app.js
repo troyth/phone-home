@@ -181,7 +181,7 @@ function report(){
 
 					    	if(typeof FILE_PACKAGES[ uid ] != 'undefined'){
 					    		fs.unlinkSync(PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
-					    		console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + name);
+					    		console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
 					    		FILE_PACKAGES[ uid ] = null;
 					    	}
 					    });
