@@ -337,7 +337,9 @@ function initImports(){
 							filename: filename
 						});
 
-						sensor.start();
+						var child_process = sensor.start();
+
+						cosole.log('*******\n\n\nSTARTING CHILD PROCESS: '+ child_process + '\n\n');
 
 						//create the sensor buffer
 						buffer.imports[i] = {
