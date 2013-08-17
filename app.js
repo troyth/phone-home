@@ -180,7 +180,7 @@ function report(){
 					    	console.log('send.success with uid: '+ uid);
 
 					    	for(var f = 0; f < FILE_PACKAGES.length; f++){
-					    		if(FILE_PACKAGES[f].getUID() == uid){
+					    		if(FILE_PACKAGES[f].uid == uid){
 					    			console.log('found FilePackage to delete: ');
 					    			console.dir( FILE_PACKAGES[f] );
 					    		}
