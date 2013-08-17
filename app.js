@@ -169,7 +169,7 @@ function report(){
 					    });
 
 					    delivery.on('send.success',function(file){
-					      //console.log('File sent successfully!');
+					      console.log('can now delete: '+ file.name);
 					    });
 					}//for each photo
 				}//if DELIVERY_READY
