@@ -181,8 +181,10 @@ function report(){
 
 					    	for(var f = 0; f < FILE_PACKAGES.length; f++){
 					    		if(FILE_PACKAGES[f].uid == uid){
-					    			console.log('found FilePackage to delete: ');
-					    			console.dir( FILE_PACKAGES[f] );
+					    			fs.unlink(PHOTO_FILEPATH + FILE_PACKAGES[f].name, function(err){
+					    				if(err) console.log('\n ERROR: attempting to unlink (eg. remove) file with filepath: ' + PHOTO_FILEPATH + FILE_PACKAGES[f].name);
+					    				console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + FILE_PACKAGES[f].name);
+					    			})
 					    		}
 					    	}
 
