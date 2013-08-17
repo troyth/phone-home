@@ -181,10 +181,13 @@ function report(){
 
 					    	for(var f = 0; f < FILE_PACKAGES.length; f++){
 					    		if(FILE_PACKAGES[f].uid == uid){
+					    			var name = FILE_PACKAGES[f].name;
 					    			fs.unlink(PHOTO_FILEPATH + FILE_PACKAGES[f].name, function(err){
-					    				if(err) console.log('\n ERROR: attempting to unlink (eg. remove) file with filepath: ' + PHOTO_FILEPATH + FILE_PACKAGES[f].name);
-					    				console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + FILE_PACKAGES[f].name);
-					    			})
+					    				if(err) console.log('\n ERROR: attempting to unlink (eg. remove) file with filepath: ' + PHOTO_FILEPATH + name);
+					    				console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + name);
+					    				FILE_PACKAGES.splice(f, 1);
+					    			});
+					    			break;
 					    		}
 					    	}
 
