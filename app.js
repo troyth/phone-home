@@ -342,6 +342,8 @@ function initImports(){
 						var child_process = sensor.start();
 
 						var interval = setInterval(function(){
+							//delete all images
+							
 							sensor.start();
 							counter++;
 							if(counter * TIMELAPSE_TIMEOUT > _import.timeout){
