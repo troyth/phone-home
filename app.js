@@ -277,7 +277,7 @@ function initBoardImports(){
 }
 
 
-function initDeliverySensors(){
+function initDeliveryImports(){
 	for(var imp in config.imports){
 		//use an anonymous function to give define a new scope for the variable i
 		(function() {
