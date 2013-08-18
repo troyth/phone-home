@@ -323,18 +323,14 @@ function initImports(){
 							'timelapse' + STRING_TOKEN + 
 							new Date().getTime() + STRING_TOKEN + 
 							_import.freq + STRING_TOKEN + 
-							'%d' + STRING_TOKEN + 
+							'%08d' + STRING_TOKEN + 
 							'.' + _import.encoding;
-
-						console.log('\n\n\nRaspiCam:');
-						console.dir(RaspiCam);
-
 
 						sensor = new RaspiCam({
 				    		mode: _import.type,
 							freq: _import.freq,
 							encoding: _import.encoding,
-							timeout: TIMELAPSE_TIMEOUT,
+							timeout: _import.timeout,
 							filepath: PHOTO_FILEPATH,
 							filename: filename
 						});
