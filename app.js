@@ -57,7 +57,7 @@ var DELIVERY_READY = false;//ready flag
 var FILE_PACKAGES = [];
 
 
-console.log('\n\n\nINITIALIZING BOARD');
+console.log('\n\n\nINITIALIZING JOHNNY-FIVE BOARD');
 //instantiate the Johnny-Five board object
 var board = new five.Board();
 
@@ -74,9 +74,9 @@ board.on("ready", function() {
 	    console.log('connected to Louis server');
 	    console.log('\n\n\nINITIALIZING LOUIS SERVER HANDSHAKE');
 
+	    //append password to config if machine is already registered with Louis server
 	    if(fs.existsSync(pFILEPATH)){
 	    	config.password = fs.readFileSync(pFILEPATH, {encoding: 'utf8'});
-	    	console.log('fetched password: '+ config.password);
 	    }
 
 	    //send configuration as handshake initialization to the Louis server
@@ -90,10 +90,10 @@ board.on("ready", function() {
 	    //listener for the Louis handshake confirmation
 	    socket.on('confirm.success', function(confirm){
 	    	//set variables sent from Louis server
-	    	machine.id = confirm.id;
-	    	FREQ = confirm.freq;
+	    	machine.id = confirm.id; //id given by Louis server
+	    	FREQ = confirm.freq; //frequency of updates, specified by Louis server
 
-	    	//TODO: write this to a persistent file
+	    	//if Louis server sends back a password (on initial connection or if password needs to be updated), update the persistent store
 	    	if(confirm.password){
 	    		machine.password = confirm.password;
 	    		console.log('new password: '+ machine.password);
@@ -104,32 +104,36 @@ board.on("ready", function() {
 
 	    	console.log('handshake confirmed');
 
-	    	//check if any photo/video imports, if so, initialize delivery for file transfer
+	    	//check if any photo/video imports, if so, initialize Delivery.js for file transfer
 	    	for(var i in config.imports){
 	    		if(config.imports[i].type == "photo" || config.imports[i].type == "timelapse" || config.imports[i].type == "video"){
-	    			console.log('\n\n\nINITIALIZING DELIVERY');
+	    			console.log('\n\n\nINITIALIZING DELIVERY.js');
 	    			delivery = dl.listen( socket );
 					delivery.connect();
 
 					delivery.on('delivery.connect',function(delivery){
 						console.log('delivery ready');
-					    DELIVERY_READY = true;
-					    delivery = delivery;
+					    DELIVERY_READY = true; //set delivery ready flag
+					    delivery = delivery; //assign delivery to global variable
+
+					    console.log('\n\n\nINITIALIZING DELIVERY IMPORTS');
+					    //initialize file-transfer-based sensors
+					    initDeliveryImports();
+					    console.log('delivery imports initialized');
 					});
 					break;
 	    		}
 	    	}
 
-	    	console.log('\n\n\nINITIALIZING IMPORTS');
-	    	//initialize sensors
-	    	initImports();
+	    	console.log('\n\n\nINITIALIZING BOARD IMPORTS');
+	    	//initialize Johnny-Five Arduino sensors
+	    	initBoardImports();
+	    	console.log('board imports initialized');
 
-	    	console.log('imports initialized');
 	    	console.log('\n\n\nBEGINNING REPORT CYCLE');
 	    	//begin the reporting cycle
-	    	
 	    	setTimeout(function(){
-	    		report();
+	    		REPORT_INTERVAL_ID = report();
 	    	}, FREQ);
 	    });
 	});
@@ -147,7 +151,7 @@ board.on("ready", function() {
 *
 **/
 function report(){
-	REPORT_INTERVAL_ID = setInterval(function(){
+	return setInterval(function(){
 		buffer.busy = true;
 
 		var report = {
@@ -160,11 +164,11 @@ function report(){
 		socket.emit('report', report);
 
 		for(var i in buffer.imports){
-			if(buffer.imports[i].type == "photo" || buffer.imports[i].type == "timelapse"){
+			if(buffer.imports[i].type == "timelapse"){
 				if(DELIVERY_READY == true){
 					for(var p in buffer.imports[i].values){
 					
-						console.log("\n\n***SENDING PHOTO AT: ");
+						console.log("\n\n***SENDING TIMELAPSE PHOTO AT: ");
 						console.log('.' + PHOTO_FILEPATH_NAME + buffer.imports[i].values[p].value);
 						console.log('\n\n');
 						
@@ -204,7 +208,7 @@ function report(){
 
 /**
 *
-* initImports
+* initBoardImports
 *
 * Creates the controller objects for each sensor using
 * Johnny-Five and the Raspberry Pi Camera protocols and
@@ -213,7 +217,7 @@ function report(){
 *
 **/
 
-function initImports(){
+function initBoardImports(){
 	for(var imp in config.imports){
 		//use an anonymous function to give define a new scope for the variable i
 		(function() {
@@ -240,17 +244,17 @@ function initImports(){
 
 		    			//set up event listeners to read values
 		    			sensor.on("read", function( err, value ) {
-						    //kill the process if NaN is returned
+						    //kill the process if NaN is returned, use forever to restart
 						  	if(isNaN(value)){
 						  		process.exit(1);
 						  	}
 
+						  	//make multiple attemps to write to buffer incase buffer is busy writing to socket
 						  	var attempts = 0;
-
 						  	while(attempts < MAX_ATTEMPTS){
 						  		if(buffer.busy == false){
-						  			//console.log('pushing value: '+ value + ' into buffer import number: '+ i);
 
+						  			//write sensor value to buffer with a timestamp
 						  			buffer.imports[i].values.push( {
 								  		timestamp: new Date().getTime(),
 								  		value: value
@@ -266,102 +270,28 @@ function initImports(){
 		    		default:
 		    			break;
 		    	}
-		    }else if(_import.source == "raspicam"){
+		    }
+
+		})();//end anonymous function
+	}//end master for loop
+}
+
+
+function initDeliverySensors(){
+	for(var imp in config.imports){
+		//use an anonymous function to give define a new scope for the variable i
+		(function() {
+			var i = imp;
+			var _import = config.imports[i];
+
+		    var sensor;
+			if(_import.source == "raspicam"){
 		    	switch(_import.type){
-		    		case "photo":
-		    			console.log("INITIALIZING PHOTO IMPORT");
-		    			
-		    			var filename = _import.name + STRING_TOKEN + 
-			    			'photo' + STRING_TOKEN + 
-			    			new Date().getTime() + STRING_TOKEN + 
-			    			_import.delay + STRING_TOKEN + 
-			    			'1' + STRING_TOKEN + 
-			    			'.' + _import.encoding;
-
-				    	sensor = new RaspiCam({
-				    		mode: _import.type,
-							freq: _import.freq,
-							encoding: _import.encoding,
-							delay: _import.delay,
-							filepath: PHOTO_FILEPATH,
-							lifetime: FREQ * 10//photo will be deleted after this time passes
-						});
-
-						sensor.start();
-
-						//create the sensor buffer
-						buffer.imports[i] = {
-							name: _import.name,
-							type: _import.type,
-							values: [] 
-						};
-
-						//set up event listeners to read values
-						sensor.on("read", function( err, photoname ) {
-						  	var attempts = 0;
-
-						  	//try to register the photo MAX_ATTEMPTS times or timeout depending on business (semaphore) of buffer
-						  	while(attempts < MAX_ATTEMPTS){
-						  		if(buffer.busy == false){
-						  			buffer.imports[i].values.push( {
-								  		timestamp: new Date().getTime(),
-								  		value: photoname
-								  	});
-
-						  			attempts = MAX_ATTEMPTS;
-						  		}else{
-						  			attempts++;
-						  		}
-						  	}
-						});
-						console.log("photo import ready");
-						break;
 					case "timelapse":
-						console.log("INITIALIZING TIMELAPSE IMPORT");
+						console.log("INITIALIZING TIMELAPSE IMPORT");	
+						var now_timestamp = new Date().getTime();
 
-						var filename = _import.name + STRING_TOKEN + 
-							'timelapse' + STRING_TOKEN + 
-							new Date().getTime() + STRING_TOKEN + 
-							_import.freq + STRING_TOKEN + 
-							'%08d' + STRING_TOKEN + 
-							'.' + _import.encoding;
-
-						sensor = new RaspiCam({
-				    		mode: _import.type,
-							freq: _import.freq,
-							encoding: _import.encoding,
-							timeout: _import.timeout,
-							filepath: PHOTO_FILEPATH,
-							filename: filename
-						});
-
-						var child_process = sensor.start();
-						console.log('*******\n\n\nSTARTING CHILD PROCESS: '+ child_process + '\n\n');
-
-
-						//set up listener for sensor process exit
-						sensor.on('raspicam.exit', function(err){
-							console.log('\napp.js::raspicam child process has exited\n');
-						});
-
-						/*
-						var counter = 0;
-
-						var interval = setInterval(function(){
-							//delete all images
-
-							
-
-							sensor.start();
-							counter++;
-							if(counter * TIMELAPSE_TIMEOUT > _import.timeout){
-								clearInterval(interval);
-							}
-						}, TIMELAPSE_TIMEOUT);
-*/
-
-						
-						
+						sensor = initTimelapseSensor(_import, i, now_timestamp);
 
 						//create the sensor buffer
 						buffer.imports[i] = {
@@ -370,45 +300,96 @@ function initImports(){
 							values: []
 						};
 
-						//set up event listeners to read values
-						sensor.on("read", function( err, photoname ) {
-						    console.log('app.js::timelapse read::photo taken with filename: '+ photoname);
-
-						  	var attempts = 0;
-
-						  	//try to register the photo MAX_ATTEMPTS times or timeout depending on business (semaphore) of buffer
-						  	while(attempts < MAX_ATTEMPTS){
-						  		if(buffer.busy == false){
-						  			buffer.imports[i].values.push( {
-								  		timestamp: new Date().getTime(),
-								  		value: photoname
-								  	});
-
-								  	console.log('\n\n\nPHOTO FILENAME ADDED TO BUFFER: '+ photoname);
-
-						  			attempts = MAX_ATTEMPTS;
-						  		}else{
-						  			attempts++;
-						  		}
-						  	}
-						});
-						console.log("timelapse import ready");
-						break;
-					case "video":
-						//there's no reason I can think of to include video
 						break;
 					default:
 						break;
-				}
-		    }
+				}//end switch _import.type
+		    }//end if raspicam
 
-		    var machine_import = {
-		    	name: _import.name,
-		    	id: i,
-		    	sensor: sensor
-		    };
-
-		    machine.imports.push( machine_import );
 		})();//end anonymous function
 	}//end master for loop
+}
+
+
+
+
+
+function initTimelapseSensor(_import, i, now_timestamp){
+
+	var filename = _import.name + STRING_TOKEN + 
+		'timelapse' + STRING_TOKEN + 
+		now_timestamp + STRING_TOKEN + 
+		_import.freq + STRING_TOKEN + 
+		'%08d' + STRING_TOKEN + 
+		'.' + _import.encoding;
+
+	var sensor = new RaspiCam({
+		mode: _import.type,
+		freq: _import.freq,
+		encoding: _import.encoding,
+		timeout: TIMELAPSE_TIMEOUT,
+		filepath: PHOTO_FILEPATH + now_timestamp + '/',
+		filename: filename
+	});
+
+	//make new directory based on current timestamp
+	console.log('\n       MKDIR: making directory: '+ sensor.filepath);
+	fs.mkdirSync( sensor.filepath );
+
+	//start capture process
+	sensor.start();
+	console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
+
+
+	//set up event listeners to read values
+	sensor.on("read", function( err, photoname ) {
+	    console.log('app.js::timelapse read::photo taken with filename: '+ photoname);
+
+	  	var attempts = 0;
+
+	  	//try to register the photo MAX_ATTEMPTS times or timeout depending on business (semaphore) of buffer
+	  	while(attempts < MAX_ATTEMPTS){
+	  		if(buffer.busy == false){
+	  			buffer.imports[i].values.push( {
+			  		timestamp: new Date().getTime(),
+			  		value: photoname
+			  	});
+
+			  	console.log('\n\n\nPHOTO FILENAME ADDED TO BUFFER: '+ photoname);
+
+	  			attempts = MAX_ATTEMPTS;
+	  		}else{
+	  			attempts++;
+	  		}
+	  	}
+	});
+
+	//set up listener for sensor process exit to perpetuate the process
+	sensor.on('raspicam.exit', function(err){
+		console.log('\napp.js::raspicam child process has exited\n');
+		var new_now_timestamp = new Date().getTime();
+
+		//reset sensor filepath
+		sensor.filepath = PHOTO_FILEPATH + new_now_timestamp + '/';
+
+		//reset sensor filename
+		sensor.filename = _import.name + STRING_TOKEN + 
+			'timelapse' + STRING_TOKEN + 
+			new_now_timestamp + STRING_TOKEN + 
+			_import.freq + STRING_TOKEN + 
+			'%08d' + STRING_TOKEN + 
+			'.' + _import.encoding;
+
+		//make new directory based on current timestamp
+		console.log('\n       MKDIR: making directory: '+ sensor.filepath);
+		fs.mkdirSync( sensor.filepath );
+
+		//restart capture process
+		sensor.start();
+		console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
+
+	});
+
+	return sensor;
+
 }
