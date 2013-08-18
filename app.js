@@ -336,10 +336,6 @@ function initTimelapseSensor(_import, i, now_timestamp){
 	console.log('\n       MKDIR: making directory: '+ sensor.filepath);
 	fs.mkdirSync( sensor.filepath );
 
-	//start capture process
-	sensor.start();
-	console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
-
 
 	//set up event listeners to read values
 	sensor.on("read", function( err, photoname ) {
@@ -389,6 +385,16 @@ function initTimelapseSensor(_import, i, now_timestamp){
 		console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
 
 	});
+
+	sensor.on('start.success', function(){
+		console.log('************************** CAM STARTED!');
+	});
+
+
+
+	//start capture process
+	sensor.start();
+	console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
 
 	return sensor;
 
