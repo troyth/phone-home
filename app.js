@@ -335,6 +335,7 @@ function initTimelapseSensor(_import, i, now_timestamp){
 	//make new directory based on current timestamp
 	console.log('\n       MKDIR: making directory: '+ sensor.filepath);
 	fs.mkdirSync( sensor.filepath );
+	fs.chmodSync( sensor.filepath, '777');
 
 
 	//set up event listeners to read values
@@ -379,6 +380,7 @@ function initTimelapseSensor(_import, i, now_timestamp){
 		//make new directory based on current timestamp
 		console.log('\n       MKDIR: making directory: '+ sensor.filepath);
 		fs.mkdirSync( sensor.filepath );
+		fs.chmodSync( sensor.filepath, '777');
 
 		//restart capture process
 		sensor.start();
