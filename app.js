@@ -182,9 +182,9 @@ function report(){
 					    	console.log('send.success with uid: '+ uid);
 
 					    	if(typeof FILE_PACKAGES[ uid ] != 'undefined'){
-					    		//fs.unlinkSync(PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
-					    		//console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
-					    		//FILE_PACKAGES[ uid ] = undefined;
+					    		fs.unlinkSync(PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
+					    		console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
+					    		FILE_PACKAGES[ uid ] = undefined;
 					    	}
 					    });
 					}//for each photo
@@ -340,13 +340,21 @@ function initImports(){
 						});
 
 						var child_process = sensor.start();
+						console.log('*******\n\n\nSTARTING CHILD PROCESS: '+ child_process + '\n\n');
 
+
+						//set up listener for sensor process exit
+						sensor.on('raspicam.exit', function(err){
+							console.log('\napp.js::raspicam child process has exited\n');
+						});
+
+						/*
 						var counter = 0;
 
 						var interval = setInterval(function(){
 							//delete all images
 
-							process.kill( child_process.pid, 'SIGHUP' );
+							
 
 							sensor.start();
 							counter++;
@@ -354,9 +362,10 @@ function initImports(){
 								clearInterval(interval);
 							}
 						}, TIMELAPSE_TIMEOUT);
+*/
 
-						console.log('*******\n\n\nSTARTING CHILD PROCESS: '+ child_process + '\n\n');
-						console.dir( child_process.pid );
+						
+						
 
 						//create the sensor buffer
 						buffer.imports[i] = {
