@@ -133,7 +133,7 @@ board.on("ready", function() {
 	    	console.log('\n\n\nBEGINNING REPORT CYCLE');
 	    	//begin the reporting cycle
 	    	setTimeout(function(){
-	    		REPORT_INTERVAL_ID = report();
+	    		report();
 	    	}, FREQ);
 	    });
 	});
@@ -151,7 +151,7 @@ board.on("ready", function() {
 *
 **/
 function report(){
-	return setInterval(function(){
+	REPORT_INTERVAL_ID = setInterval(function(){
 		buffer.busy = true;
 
 		var report = {
