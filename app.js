@@ -365,7 +365,37 @@ function initTimelapseSensor(_import, i, now_timestamp){
 
 	//set up listener for sensor process exit to perpetuate the process
 	sensor.on('raspicam.exit', function(err){
-		console.log('\napp.js::raspicam child process has exited\n');
+		console.log('\napp.js::raspicam.exit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n');
+	});
+
+
+
+	sensor.on('start.success', function(){
+		console.log('************************** CAM STARTED!');
+	});
+
+
+
+	//start capture process
+	sensor.start();
+	console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
+
+	sensor.child_process.on('close', function(){
+		console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
+
+		restartTimelapse(sensor, _import, i);
+		
+			
+	});
+
+	return sensor;
+
+}
+
+
+function restartTimelapse(sensor, _import, i){
+	//wait one report cycle to make sure any remaining photos from the previous timelapse have finished sending
+	setTimeout(function(){
 		var new_now_timestamp = new Date().getTime();
 
 		//reset sensor filepath
@@ -391,54 +421,12 @@ function initTimelapseSensor(_import, i, now_timestamp){
 		sensor.start();
 		console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
 
-	});
+		sensor.child_process.on('close', function(){
+			console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
 
-
-
-	sensor.on('start.success', function(){
-		console.log('************************** CAM STARTED!');
-	});
-
-
-
-	//start capture process
-	sensor.start();
-	console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
-
-	sensor.child_process.on('close', function(){
-		console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
-
-		//wait one report cycle to make sure any remaining photos from the previous timelapse have finished sending
-		setTimeout(function(){
-			var new_now_timestamp = new Date().getTime();
-
-			//reset sensor filepath
-			sensor.filepath = PHOTO_FILEPATH + new_now_timestamp + '/';
-
-			//reset sensor filename
-			sensor.filename = _import.name + STRING_TOKEN + 
-				'timelapse' + STRING_TOKEN + 
-				new_now_timestamp + STRING_TOKEN + 
-				_import.freq + STRING_TOKEN + 
-				'%08d' + STRING_TOKEN + 
-				'.' + _import.encoding;
-
-			//make new directory based on current timestamp
-			console.log('\n       MKDIR: making directory: '+ sensor.filepath);
-			fs.mkdirSync( sensor.filepath );
-			fs.chmodSync( sensor.filepath, '777');
-
-			//update buffer.imports[i].path
-			buffer.imports[i].path = PHOTO_FILEPATH + new_now_timestamp + '/';
-
-			//restart capture process
-			sensor.start();
-			console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
-
-		}, FREQ);
+			restartTimelapse(sensor, _import, i);
 			
-	});
+		});
 
-	return sensor;
-
+	}, FREQ);
 }
