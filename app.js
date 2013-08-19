@@ -169,12 +169,12 @@ function report(){
 					for(var p in buffer.imports[i].values){
 					
 						console.log("\n\n***SENDING TIMELAPSE PHOTO AT: ");
-						console.log('.' + PHOTO_FILEPATH_NAME + buffer.imports[i].values[p].value);
+						console.log('.' + buffer.imports[i].path + buffer.imports[i].values[p].value);
 						console.log('\n\n');
 						
 					    delivery.send({
 					    	name: buffer.imports[i].values[p].value,
-					    	path : '.' + PHOTO_FILEPATH_NAME + buffer.imports[i].values[p].value
+					    	path : '.' + buffer.imports[i].path + buffer.imports[i].values[p].value
 					    });
 
 					    delivery.on('send.start',function(filePackage){
@@ -297,6 +297,7 @@ function initDeliveryImports(){
 						buffer.imports[i] = {
 							name: _import.name,
 							type: _import.type,
+							path: PHOTO_FILEPATH + now_timestamp + '/',
 							values: []
 						};
 
@@ -381,6 +382,9 @@ function initTimelapseSensor(_import, i, now_timestamp){
 		console.log('\n       MKDIR: making directory: '+ sensor.filepath);
 		fs.mkdirSync( sensor.filepath );
 		fs.chmodSync( sensor.filepath, '777');
+
+		//update buffer.imports[i].path
+		buffer.imports[i].path = PHOTO_FILEPATH + new_now_timestamp + '/';
 
 		//restart capture process
 		sensor.start();
