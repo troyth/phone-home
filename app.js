@@ -364,23 +364,24 @@ function initTimelapseSensor(_import, i, now_timestamp){
 	  	}
 	});
 
-	//set up listener for sensor process exit to perpetuate the process
-	sensor.on('raspicam.exit', function(err){
-		console.log('\napp.js::raspicam.exit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n');
-	});
-
-
-
 	sensor.on('start.success', function(){
 		console.log('************************** CAM STARTED!');
 	});
-
 
 
 	//start capture process
 	sensor.start();
 	console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
 
+
+	//set up listener for sensor process exit to perpetuate the process
+	sensor.on('raspicam.exit', function(err){
+		console.log('\napp.js::raspicam.exit emitted\n');
+
+		restartTimelapse(sensor, _import, i);
+	});
+
+	/*
 	sensor.child_process.on('close', function(){
 		console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
 
@@ -393,7 +394,7 @@ function initTimelapseSensor(_import, i, now_timestamp){
 		restartTimelapse(sensor, _import, i);
 		
 			
-	});
+	});*/
 
 	return sensor;
 
@@ -432,7 +433,7 @@ function restartTimelapse(sensor, _import, i){
 
 		//restart capture process
 		sensor.start();
-		console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
+		console.log('*******STARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
 
 		sensor.child_process.on('close', function(){
 			console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
