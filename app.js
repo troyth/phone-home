@@ -383,6 +383,9 @@ function initTimelapseSensor(_import, i, now_timestamp){
 	sensor.child_process.on('close', function(){
 		console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
 
+		//remove all photos in previous timelapse directory
+		fs.unlinkSync( sensor.filepath );
+
 		restartTimelapse(sensor, _import, i);
 		
 			
@@ -423,6 +426,9 @@ function restartTimelapse(sensor, _import, i){
 
 		sensor.child_process.on('close', function(){
 			console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
+
+			//remove all photos in previous timelapse directory
+			fs.unlinkSync( sensor.filepath );
 
 			restartTimelapse(sensor, _import, i);
 			
