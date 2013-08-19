@@ -308,8 +308,6 @@ function initDeliveryImports(){
 
 						initTimelapseSensor(sensor, _import, i, true);
 
-						
-
 						break;
 					default:
 						break;
@@ -332,7 +330,7 @@ function initTimelapseSensor(sensor, _import, i, init){
 			if(err) console.log('error trying to remove previous timelapse directory');
 			console.log('\nDELETED PREVIOUS TIMELAPSE DIRECTORY AND PHOTOS\n');
 		});
-	}
+	}//end if !init
 
 	var now_timestamp = new Date().getTime();
 
@@ -378,8 +376,6 @@ function initTimelapseSensor(sensor, _import, i, init){
 				  		value: photoname
 				  	});
 
-				  	//console.log('PHOTO FILENAME ADDED TO BUFFER: '+ photoname + '\n\n');
-
 		  			attempts = MAX_ATTEMPTS;
 		  		}else{
 		  			attempts++;
@@ -399,68 +395,7 @@ function initTimelapseSensor(sensor, _import, i, init){
 				initTimelapseSensor(sensor, _import, i, false);
 			}, FREQ);
 		});
-	}
+	}//end if init
 
-	/*
-	sensor.child_process.on('close', function(){
-		console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
-
-		//remove all photos in previous timelapse directory
-		rmdir( sensor.filepath, function(err){
-			if(err) console.log('error trying to remove previous timelapse directory');
-			console.log('\nDELETED PREVIOUS TIMELAPSE DIRECTORY AND PHOTOS\n');
-		});
-
-		restartTimelapse(sensor, _import, i);
-		
-			
-	});*/
-
-	return sensor;
-
-}
-
-
-function restartTimelapse(sensor, _import, i){
-	//wait one report cycle to make sure any remaining photos from the previous timelapse have finished sending
-	setTimeout(function(){
-		//remove all photos in previous timelapse directory
-		rmdir( sensor.filepath, function(err){
-			if(err) console.log('error trying to remove previous timelapse directory');
-			console.log('\nDELETED PREVIOUS TIMELAPSE DIRECTORY AND PHOTOS\n');
-		});
-
-		var new_now_timestamp = new Date().getTime();
-
-		//reset sensor filepath
-		sensor.filepath = PHOTO_FILEPATH + new_now_timestamp + '/';
-
-		//reset sensor filename
-		sensor.filename = _import.name + STRING_TOKEN + 
-			'timelapse' + STRING_TOKEN + 
-			new_now_timestamp + STRING_TOKEN + 
-			_import.freq + STRING_TOKEN + 
-			'%08d' + STRING_TOKEN + 
-			'.' + _import.encoding;
-
-		//make new directory based on current timestamp
-		console.log('\n       MKDIR: making directory: '+ sensor.filepath);
-		fs.mkdirSync( sensor.filepath );
-		fs.chmodSync( sensor.filepath, '777');
-
-		//update buffer.imports[i].path
-		buffer.imports[i].path = PHOTO_FILEPATH + new_now_timestamp + '/';
-
-		//restart capture process
-		sensor.start();
-		console.log('*******STARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
-
-		sensor.child_process.on('close', function(){
-			console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
-
-			restartTimelapse(sensor, _import, i);
-			
-		});
-
-	}, FREQ);
+	//return sensor;
 }
