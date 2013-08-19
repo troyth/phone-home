@@ -393,6 +393,18 @@ function initTimelapseSensor(_import, i, now_timestamp){
 
 	});
 
+
+
+	sensor.on('start.success', function(){
+		console.log('************************** CAM STARTED!');
+	});
+
+
+
+	//start capture process
+	sensor.start();
+	console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
+
 	sensor.child_process.on('close', function(){
 		console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
 		var new_now_timestamp = new Date().getTime();
@@ -420,16 +432,6 @@ function initTimelapseSensor(_import, i, now_timestamp){
 		sensor.start();
 		console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
 	});
-
-	sensor.on('start.success', function(){
-		console.log('************************** CAM STARTED!');
-	});
-
-
-
-	//start capture process
-	sensor.start();
-	console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
 
 	return sensor;
 
