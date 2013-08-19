@@ -336,7 +336,7 @@ function initTimelapseSensor(sensor, _import, i, now_timestamp, init){
 	}
 
 	//set sensor filename
-	var filename = _import.name + STRING_TOKEN + 
+	sensor.filename = _import.name + STRING_TOKEN + 
 		'timelapse' + STRING_TOKEN + 
 		now_timestamp + STRING_TOKEN + 
 		_import.freq + STRING_TOKEN + 
