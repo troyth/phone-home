@@ -118,12 +118,11 @@ board.on("ready", function() {
 					    delivery = delivery; //assign delivery to global variable
 
 					    delivery.on('send.start',function(filePackage){
-					    	console.log('send.start\n\n');
 					      	FILE_PACKAGES[ filePackage.uid ] = filePackage.name;
 					    });
 
 					    delivery.on('send.success',function(uid){
-					    	console.log('send.success with uid: '+ uid);
+					    	//console.log('send.success with uid: '+ uid);
 					    	/*
 					    	if(typeof FILE_PACKAGES[ uid ] != 'undefined'){
 					    		fs.unlinkSync(PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
@@ -135,7 +134,7 @@ board.on("ready", function() {
 					    console.log('\n\n\nINITIALIZING DELIVERY IMPORTS');
 					    //initialize file-transfer-based sensors
 					    initDeliveryImports();
-					    console.log('delivery imports initialized');
+					    console.log('delivery imports initialized\n\n');
 					});
 					break;
 	    		}
@@ -404,6 +403,12 @@ function initTimelapseSensor(_import, i, now_timestamp){
 function restartTimelapse(sensor, _import, i){
 	//wait one report cycle to make sure any remaining photos from the previous timelapse have finished sending
 	setTimeout(function(){
+		//remove all photos in previous timelapse directory
+		rmdir( sensor.filepath, function(err){
+			if(err) console.log('error trying to remove previous timelapse directory');
+			console.log('\nDELETED PREVIOUS TIMELAPSE DIRECTORY AND PHOTOS\n');
+		});
+
 		var new_now_timestamp = new Date().getTime();
 
 		//reset sensor filepath
@@ -431,12 +436,6 @@ function restartTimelapse(sensor, _import, i){
 
 		sensor.child_process.on('close', function(){
 			console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
-
-			//remove all photos in previous timelapse directory
-			rmdir( sensor.filepath, function(err){
-				if(err) console.log('error trying to remove previous timelapse directory');
-				console.log('\nDELETED PREVIOUS TIMELAPSE DIRECTORY AND PHOTOS\n');
-			});
 
 			restartTimelapse(sensor, _import, i);
 			
