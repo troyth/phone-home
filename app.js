@@ -41,7 +41,7 @@ var FREQ = -1;
 
 var REPORT_INTERVAL_ID;
 
-var TIMELAPSE_TIMEOUT = 20000;//after this time, kill the timelapse and start another one
+var TIMELAPSE_TIMEOUT = 999999999;//20000;//after this time, kill the timelapse and start another one
 
 //maximum attempts to try to write to a busy buffer
 var MAX_ATTEMPTS = 5;
