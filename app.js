@@ -347,7 +347,7 @@ function initTimelapseSensor(sensor, _import, i, now_timestamp, init){
 	sensor.filepath = PHOTO_FILEPATH + now_timestamp + '/';
 
 	//update buffer.imports[i].path
-	buffer.imports[i].path = PHOTO_FILEPATH + new_now_timestamp + '/';
+	buffer.imports[i].path = PHOTO_FILEPATH + now_timestamp + '/';
 
 
 	//make new directory based on current timestamp
