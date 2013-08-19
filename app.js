@@ -393,7 +393,7 @@ function initTimelapseSensor(sensor, _import, i, init){
 
 			setTimeout(function(){
 				initTimelapseSensor(sensor, _import, i, false);
-			}, FREQ);
+			}, FREQ*2);
 		});
 	}//end if init
 
