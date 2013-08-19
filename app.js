@@ -4,7 +4,8 @@ var io = require('socket.io-client')
 	, RaspiCam = require("raspicam")
 	, extend = require('util')._extend
 	, dl  = require('delivery')
-    , fs  = require('fs');
+    , fs  = require('fs')
+    , rmdir = require('rimraf');
 
 //load and parse the machine.json config file
 var config = require('./machine');
@@ -384,7 +385,10 @@ function initTimelapseSensor(_import, i, now_timestamp){
 		console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
 
 		//remove all photos in previous timelapse directory
-		fs.unlinkSync( sensor.filepath );
+		rmdir( sensor.filepath, function(err){
+			if(err) console.log('error trying to remove previous timelapse directory');
+			console.log('\nDELETED PREVIOUS TIMELAPSE DIRECTORY AND PHOTOS\n');
+		});
 
 		restartTimelapse(sensor, _import, i);
 		
@@ -428,7 +432,10 @@ function restartTimelapse(sensor, _import, i){
 			console.log('\n\n\n\n\n\nCLOSED PROCESS!!!!!!!\n\n\n\n');
 
 			//remove all photos in previous timelapse directory
-			fs.unlinkSync( sensor.filepath );
+			rmdir( sensor.filepath, function(err){
+				if(err) console.log('error trying to remove previous timelapse directory');
+				console.log('\nDELETED PREVIOUS TIMELAPSE DIRECTORY AND PHOTOS\n');
+			});
 
 			restartTimelapse(sensor, _import, i);
 			

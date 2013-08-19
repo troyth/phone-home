@@ -9,6 +9,7 @@
     "socket.io-client": "*",
     "delivery": "*",
     "johnny-five": "*",
-    "raspicam": "*"
+    "raspicam": "*",
+    "rimraf": "*"
   }
 }
