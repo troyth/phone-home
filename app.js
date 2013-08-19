@@ -169,16 +169,15 @@ function report(){
 					for(var p in buffer.imports[i].values){
 					
 						console.log("\n\n***SENDING TIMELAPSE PHOTO AT: ");
-						console.log('.' + buffer.imports[i].path + buffer.imports[i].values[p].value);
-						console.log('\n\n');
+						console.log(buffer.imports[i].path + buffer.imports[i].values[p].value);
 						
 					    delivery.send({
 					    	name: buffer.imports[i].values[p].value,
-					    	path : '.' + buffer.imports[i].path + buffer.imports[i].values[p].value
+					    	path: buffer.imports[i].path + buffer.imports[i].values[p].value
 					    });
 
 					    delivery.on('send.start',function(filePackage){
-					    	console.log('\n\nsend.start');
+					    	console.log('send.start\n\n');
 					      	FILE_PACKAGES[ filePackage.uid ] = filePackage.name;
 					    });
 
@@ -353,7 +352,7 @@ function initTimelapseSensor(_import, i, now_timestamp){
 			  		value: photoname
 			  	});
 
-			  	console.log('\n\n\nPHOTO FILENAME ADDED TO BUFFER: '+ photoname);
+			  	console.log('PHOTO FILENAME ADDED TO BUFFER: '+ photoname + '\n\n');
 
 	  			attempts = MAX_ATTEMPTS;
 	  		}else{
