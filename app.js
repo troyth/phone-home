@@ -362,6 +362,7 @@ function initTimelapseSensor(sensor, _import, i, now_timestamp, init){
 
 	//set up event listeners on initialize
 	if(init){
+		console.log('\nSETTING UP LISTENERS!');
 		//set up event listeners to read values
 		sensor.on("read", function( err, photoname ) {
 		    //console.log('app.js::timelapse read::photo taken with filename: '+ photoname);
