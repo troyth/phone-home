@@ -293,15 +293,23 @@ function initDeliveryImports(){
 						console.log("INITIALIZING TIMELAPSE IMPORT");	
 						var now_timestamp = new Date().getTime();
 
-						sensor = initTimelapseSensor(_import, i, now_timestamp);
+						var sensor = new RaspiCam({
+							mode: _import.type,
+							freq: _import.freq,
+							encoding: _import.encoding,
+							timeout: TIMELAPSE_TIMEOUT
+						});
 
 						//create the sensor buffer
 						buffer.imports[i] = {
 							name: _import.name,
 							type: _import.type,
-							path: PHOTO_FILEPATH + now_timestamp + '/',
 							values: []
 						};
+
+						initTimelapseSensor(sensor, _import, i, now_timestamp, true);
+
+						
 
 						break;
 					default:
@@ -317,8 +325,17 @@ function initDeliveryImports(){
 
 
 
-function initTimelapseSensor(_import, i, now_timestamp){
+function initTimelapseSensor(sensor, _import, i, now_timestamp, init){
 
+	if(!init){
+		//remove all photos in previous timelapse directory
+		rmdir( sensor.filepath, function(err){
+			if(err) console.log('error trying to remove previous timelapse directory');
+			console.log('\nDELETED PREVIOUS TIMELAPSE DIRECTORY AND PHOTOS\n');
+		});
+	}
+
+	//set sensor filename
 	var filename = _import.name + STRING_TOKEN + 
 		'timelapse' + STRING_TOKEN + 
 		now_timestamp + STRING_TOKEN + 
@@ -326,14 +343,12 @@ function initTimelapseSensor(_import, i, now_timestamp){
 		'%08d' + STRING_TOKEN + 
 		'.' + _import.encoding;
 
-	var sensor = new RaspiCam({
-		mode: _import.type,
-		freq: _import.freq,
-		encoding: _import.encoding,
-		timeout: TIMELAPSE_TIMEOUT,
-		filepath: PHOTO_FILEPATH + now_timestamp + '/',
-		filename: filename
-	});
+	//set sensor filepath
+	sensor.filepath = PHOTO_FILEPATH + now_timestamp + '/';
+
+	//update buffer.imports[i].path
+	buffer.imports[i].path = PHOTO_FILEPATH + new_now_timestamp + '/';
+
 
 	//make new directory based on current timestamp
 	console.log('\n       MKDIR: making directory: '+ sensor.filepath);
@@ -341,45 +356,48 @@ function initTimelapseSensor(_import, i, now_timestamp){
 	fs.chmodSync( sensor.filepath, '777');
 
 
-	//set up event listeners to read values
-	sensor.on("read", function( err, photoname ) {
-	    //console.log('app.js::timelapse read::photo taken with filename: '+ photoname);
-
-	  	var attempts = 0;
-
-	  	//try to register the photo MAX_ATTEMPTS times or timeout depending on business (semaphore) of buffer
-	  	while(attempts < MAX_ATTEMPTS){
-	  		if(buffer.busy == false){
-	  			buffer.imports[i].values.push( {
-			  		timestamp: new Date().getTime(),
-			  		value: photoname
-			  	});
-
-			  	//console.log('PHOTO FILENAME ADDED TO BUFFER: '+ photoname + '\n\n');
-
-	  			attempts = MAX_ATTEMPTS;
-	  		}else{
-	  			attempts++;
-	  		}
-	  	}
-	});
-
-	sensor.on('start.success', function(){
-		console.log('************************** CAM STARTED!');
-	});
-
-
 	//start capture process
 	sensor.start();
 	console.log('*******\n\n\nSTARTING TIMELAPSE CHILD PROCESS with PID: '+ sensor.child_process.pid + '\n\n');
 
+	//set up event listeners on initialize
+	if(init){
+		//set up event listeners to read values
+		sensor.on("read", function( err, photoname ) {
+		    //console.log('app.js::timelapse read::photo taken with filename: '+ photoname);
 
-	//set up listener for sensor process exit to perpetuate the process
-	sensor.on('raspicam.exit', function(err){
-		console.log('\napp.js::raspicam.exit emitted\n');
+		  	var attempts = 0;
 
-		restartTimelapse(sensor, _import, i);
-	});
+		  	//try to register the photo MAX_ATTEMPTS times or timeout depending on business (semaphore) of buffer
+		  	while(attempts < MAX_ATTEMPTS){
+		  		if(buffer.busy == false){
+		  			buffer.imports[i].values.push( {
+				  		timestamp: new Date().getTime(),
+				  		value: photoname
+				  	});
+
+				  	//console.log('PHOTO FILENAME ADDED TO BUFFER: '+ photoname + '\n\n');
+
+		  			attempts = MAX_ATTEMPTS;
+		  		}else{
+		  			attempts++;
+		  		}
+		  	}
+		});
+
+		sensor.on('start.success', function(){
+			console.log('************************** CAM STARTED!');
+		});
+
+		//set up listener for sensor process exit to perpetuate the process
+		sensor.on('raspicam.exit', function(err){
+			console.log('\napp.js::raspicam.exit emitted\n');
+
+			setTimeout(function(){
+				initTimelapseSensor(sensor, _import, i, now_timestamp, false);
+			}, FREQ);
+		});
+	}
 
 	/*
 	sensor.child_process.on('close', function(){
