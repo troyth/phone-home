@@ -15,7 +15,7 @@
       "type": "timelapse",
       "source": "raspicam",
       "encoding": "jpg",
-      "freq": 2000
+      "freq": 59000
     }
   },
   "exports": null
