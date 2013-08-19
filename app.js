@@ -290,8 +290,7 @@ function initDeliveryImports(){
 			if(_import.source == "raspicam"){
 		    	switch(_import.type){
 					case "timelapse":
-						console.log("INITIALIZING TIMELAPSE IMPORT");	
-						var now_timestamp = new Date().getTime();
+						console.log("INITIALIZING TIMELAPSE IMPORT");
 
 						var sensor = new RaspiCam({
 							mode: _import.type,
@@ -307,7 +306,7 @@ function initDeliveryImports(){
 							values: []
 						};
 
-						initTimelapseSensor(sensor, _import, i, now_timestamp, true);
+						initTimelapseSensor(sensor, _import, i, true);
 
 						
 
@@ -325,7 +324,7 @@ function initDeliveryImports(){
 
 
 
-function initTimelapseSensor(sensor, _import, i, now_timestamp, init){
+function initTimelapseSensor(sensor, _import, i, init){
 
 	if(!init){
 		//remove all photos in previous timelapse directory
@@ -334,6 +333,8 @@ function initTimelapseSensor(sensor, _import, i, now_timestamp, init){
 			console.log('\nDELETED PREVIOUS TIMELAPSE DIRECTORY AND PHOTOS\n');
 		});
 	}
+
+	var now_timestamp = new Date().getTime();
 
 	//set sensor filename
 	sensor.filename = _import.name + STRING_TOKEN + 
@@ -395,7 +396,7 @@ function initTimelapseSensor(sensor, _import, i, now_timestamp, init){
 			console.log('\napp.js::raspicam.exit emitted\n');
 
 			setTimeout(function(){
-				initTimelapseSensor(sensor, _import, i, now_timestamp, false);
+				initTimelapseSensor(sensor, _import, i, false);
 			}, FREQ);
 		});
 	}
