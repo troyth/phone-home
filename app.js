@@ -116,6 +116,21 @@ board.on("ready", function() {
 					    DELIVERY_READY = true; //set delivery ready flag
 					    delivery = delivery; //assign delivery to global variable
 
+					    delivery.on('send.start',function(filePackage){
+					    	console.log('send.start\n\n');
+					      	FILE_PACKAGES[ filePackage.uid ] = filePackage.name;
+					    });
+
+					    delivery.on('send.success',function(uid){
+					    	console.log('send.success with uid: '+ uid);
+					    	/*
+					    	if(typeof FILE_PACKAGES[ uid ] != 'undefined'){
+					    		fs.unlinkSync(PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
+					    		console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
+					    		FILE_PACKAGES[ uid ] = undefined;
+					    	}*/
+					    });
+
 					    console.log('\n\n\nINITIALIZING DELIVERY IMPORTS');
 					    //initialize file-transfer-based sensors
 					    initDeliveryImports();
@@ -176,20 +191,6 @@ function report(){
 					    	path: buffer.imports[i].path + buffer.imports[i].values[p].value
 					    });
 
-					    delivery.on('send.start',function(filePackage){
-					    	console.log('send.start\n\n');
-					      	FILE_PACKAGES[ filePackage.uid ] = filePackage.name;
-					    });
-
-					    delivery.on('send.success',function(uid){
-					    	console.log('send.success with uid: '+ uid);
-					    	/*
-					    	if(typeof FILE_PACKAGES[ uid ] != 'undefined'){
-					    		fs.unlinkSync(PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
-					    		console.log('\n\n SUCCESS DELETING FILE at: ' + PHOTO_FILEPATH + FILE_PACKAGES[ uid ]);
-					    		FILE_PACKAGES[ uid ] = undefined;
-					    	}*/
-					    });
 					}//for each photo
 				}//if DELIVERY_READY
 			}//if photo or timelapse			
