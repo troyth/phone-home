@@ -185,8 +185,9 @@ function report(){
 				if(DELIVERY_READY == true){
 					for(var p in buffer.imports[i].values){
 					
-						console.log("\n\n***SENDING TIMELAPSE PHOTO AT: ");
-						console.log(buffer.imports[i].path + buffer.imports[i].values[p].value);
+						//console.log("\n\n***SENDING TIMELAPSE PHOTO AT: ");
+						//console.log(buffer.imports[i].path + buffer.imports[i].values[p].value);
+						console.log(buffer.imports[i].values[p].value);
 						
 					    delivery.send({
 					    	name: buffer.imports[i].values[p].value,
@@ -343,7 +344,7 @@ function initTimelapseSensor(_import, i, now_timestamp){
 
 	//set up event listeners to read values
 	sensor.on("read", function( err, photoname ) {
-	    console.log('app.js::timelapse read::photo taken with filename: '+ photoname);
+	    //console.log('app.js::timelapse read::photo taken with filename: '+ photoname);
 
 	  	var attempts = 0;
 
@@ -355,7 +356,7 @@ function initTimelapseSensor(_import, i, now_timestamp){
 			  		value: photoname
 			  	});
 
-			  	console.log('PHOTO FILENAME ADDED TO BUFFER: '+ photoname + '\n\n');
+			  	//console.log('PHOTO FILENAME ADDED TO BUFFER: '+ photoname + '\n\n');
 
 	  			attempts = MAX_ATTEMPTS;
 	  		}else{
