@@ -231,11 +231,7 @@ function initBoardImports(){
 		    if(_import.source == "arduino"){
 		    	switch(_import.type){
 		    		case "analog":
-		    			sensor = new five.Sensor({
-		    				pin: _import.pin,
-		    				freq: _import.freq,
-		    				range: _import.range
-		    			});
+		    			sensor = new five.Sensor(_import.params);
 
 		    			//create the sensor buffer
 		    			buffer.imports[i] = {
@@ -332,9 +328,10 @@ function initTimelapseSensor(sensor, _import, i, init){
 		});
 	}//end if !init
 
-	var now_timestamp = new Date().getTime();
+	var now_timestamp = Date.now();
 
 	//set sensor filename
+	//USE ARRAY AND JOIN!!
 	sensor.filename = _import.name + STRING_TOKEN + 
 		'timelapse' + STRING_TOKEN + 
 		now_timestamp + STRING_TOKEN + 

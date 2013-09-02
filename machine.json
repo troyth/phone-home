@@ -4,16 +4,21 @@
   "imports": {
     "photoresistor": {
       "name": "photoresistor",
+      "source": "johnny-five",
+      "payload": "serial",
       "type": "analog",
-      "source": "arduino",
-      "pin": "A2",
-      "range": [0, 1000],
-      "freq": 1000
+      "params": {
+        "pin": "A2",
+        "range": [0, 1000],
+        "freq": 1000
+      },
+      
     },
     "roomcam": {
       "name": "roomcam",
-      "type": "timelapse",
       "source": "raspicam",
+      "payload": "binary",
+      "type": "timelapse",
       "encoding": "jpg",
       "freq": 59000
     }
