@@ -1,6 +1,6 @@
 {
   "name": "phone-home",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "main": "lib/phone-home",
   "scripts": {
@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "socket.io-client": "*",
+    "es6-collections": "*",
     "delivery": "*",
     "johnny-five": "*",
     "raspicam": "*",
