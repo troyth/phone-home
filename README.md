@@ -28,6 +28,8 @@ The communicator is the principal object abstraction provided by Phone Home (sim
 
 ![E.T.\'s communicator](http://upload.wikimedia.org/wikipedia/commons/4/4c/ET_Communicator_Cropped.jpg)
 
+The communicator consists of a single Rasberry Pi running Node.js and connected to any number of sensors and actuators allowing a physical object to collect information from its environment and pass it on to a server, and to affect it's environment by triggering its actuators from either local logic or commands from a server.
+
 
 
 ## machine.json
