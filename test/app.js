@@ -1,16 +1,17 @@
-var phone_home = require("phone-home");
+var home = require("phone-home")
+	, machine = require('./machine');//machine.json
 
 /**
 *
 * Initialize all sensors and actuators in machine.json
 * 
 * Uses machine.json to load handlers (eg. Johnny-Five, node-raspicam, etc)
-* and initialize listeners and create objects (eg. sensors, cameras)
+* and initialize listeners and create objects (eg. sensors, cameras) in communicator
 *
-* Triggers "ready" event on phone_home when complete
+* Triggers "ready" event when complete
 *
 **/
-phone_home.init();
+var communicator = new home.Communicator( machine );
 
 
 /**
@@ -18,7 +19,7 @@ phone_home.init();
 * Begin the app
 *
 **/
-phone_home.on("ready", function(){
+communicator.on("ready", function(){
 
 	/**
 	*
