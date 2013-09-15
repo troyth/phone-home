@@ -68,7 +68,7 @@ board.on("ready", function() {
 	console.log('board ready');
 	console.log('\n\n\nINITIALIZING CONNECTION TO LOUIS SERVER');
 	//connect to the Louis server using socket.io
-	socket = io.connect(config.server, {reconnect: true});
+	socket = io.connect(config.homes.server.url, {reconnect: true});
 
 	//listen for the server connection
 	socket.on('connect', function() { 

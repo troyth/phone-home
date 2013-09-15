@@ -1,6 +1,12 @@
 {
   "name": "gsapp_1",
-  "server": "http://api.sitetosite.co:3001",
+  "homes": {
+      "server": {
+        "url": "http://api.sitetosite.co:3001",
+        "type": "server",
+        "protocol": "louis"
+      }
+    },
   "imports": {
     "photoresistor": {
       "name": "photoresistor",
