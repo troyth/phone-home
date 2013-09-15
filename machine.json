@@ -7,7 +7,7 @@
       "protocol": "louis"
     }
   },
-  "imports": {
+  "inputs": {
     "photoresistor": {
       "name": "photoresistor",
       "source": "johnny-five",
@@ -29,5 +29,6 @@
       "freq": 59000
     }
   },
-  "exports": null
+  "outputs": null,
+  "schematic" : null
 }

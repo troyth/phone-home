@@ -8,10 +8,11 @@ __Note: below describes more of a roadmap than the current implementation. It wi
 
 ## Ambition
 
-The general scenario is this: design and build an object - a chair, a table, a door, a wall, a floor - and fit it out with an array of sensors and actuators. Then deploy it in physical space (eg. a room, a public square, anywhere with wifi). Now what? Connect it to the cloud, to a server that can log the values of your sensors, and store the binaries of, say, photos and audio you will record. That server, [Louis](https://github.com/troyth/louis) if you follow the convention here, has an API, so you can build apps on top of it that will connect your object to other objects. Through the same connection you used to beam up your data, you can beam down commands to the actuators in your object. Now you have the pieces of an architectural symphony, you just have to orchestrate it.
+The general scenario is this: design and build an object - a chair, a table, a door, a wall, a floor - and fit it out with an array of sensors and actuators. Then deploy it in physical space (eg. a room, a public square, anywhere with wifi). Now what? Either connect it to the cloud or directly to other objects on the same local network.
 
-Phone Home is the part that lets you send your object into the world have it just work, automatically. That is, you will pre-program it, using the protocols that allow Phone Home to talk to the Louis server, so that all you need to do is connect it to wifi, and it will start streaming to the cloud.
+The [Louis](https://github.com/troyth/louis) server was designed to connect to Phone Home over Web Sockets in order to log the values of your sensors, store binary files (eg. photos, video, audio, etc.), perform complex analysis, and send back signals to trigger actuators. Louis also has a Web Sockets API and an HTTP API so you can build apps on top of it that will connect your object to other objects with apps ("programs" in a more architecture-friendly language) that will determine and distribute outputs based on inputs, as well as on the physical configuration of the space itself.
 
+Phone Home has an autostart shell script, so when you deploy your Raspberry Pi enabled objects anywhere in the world, all you have to do is power them on, provide a wifi signal, and your objects will automatically initialize and begin to connect to the server.
 
 
 ## Approach
