@@ -24,7 +24,7 @@ Once the handshake is complete, the Phone Home app looks at the `machine.json` f
 
 ## Communicator
 
-The communicator is the principal object abstraction provided by Phone Home (similar to the Board object provided by Johnny-Five). It is named for the communicator in the 1982 film, E.T., which was an assembly of many sensors, actuators and displays to help E.T. phone home.
+The communicator is the principal object abstraction provided by Phone Home (similar to the Board object provided by Johnny-Five). It is named for the [communicator](http://antoinebertin.tumblr.com/post/26215160310/the-e-t-communicator-was-connected-to-tree) in the 1982 film, [E.T.](http://www.imdb.com/title/tt0083866/), which was an assembly of many sensors, actuators and displays to help E.T. phone home.
 
 ![E.T.\'s communicator](http://upload.wikimedia.org/wikipedia/commons/4/4c/ET_Communicator_Cropped.jpg)
 
