@@ -7,13 +7,20 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "socket.io-client": "*",
-    "es6-collections": "*",
-    "delivery": "*",
-    "johnny-five": "*",
-    "raspicam": "*",
-    "rimraf": "*",
-    "lodash": "*",
-    "colors": "*"
+    "socket.io-client": "latest",
+    "es6-collections": "latest",
+    "delivery": "latest",
+    "johnny-five": "latest",
+    "raspicam": "latest",
+    "rimraf": "latest",
+    "lodash": ">=0.1.0",
+    "colors": ">=0.5.1"
+  },
+  "devDependencies":{
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "sinon": "~1.7.3",
+    "grunt-jsbeautifier": "~0.2.2"
   }
 }
