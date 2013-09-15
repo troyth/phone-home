@@ -2,6 +2,7 @@
   "name": "phone-home",
   "version": "0.0.1",
   "private": false,
+  "main": "lib/phone-home",
   "scripts": {
     "start": "node app.js"
   },
