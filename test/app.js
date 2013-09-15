@@ -26,12 +26,16 @@ phone_home.on("ready", function(){
 	*
 	**/
 	//cycle through inputs to bind listeners and make changes individually
-	for(var in in phone_home.inputs){
+	for(var input in phone_home.inputs){
+		switch( phone_home.inputs[input].source){
+			case "johnny-five":
 
+				break;
+		}
 	}
 
 	//cycle through outputs to bind listeners and make changes individually
-	for(var out in phone_home.outputs){
+	for(var output in phone_home.outputs){
 
 	}
 

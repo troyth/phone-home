@@ -31,8 +31,8 @@ Phone Home relies heavily on the `machine.json` file that specifies the id of a 
 	{
 		"name": "my_machine_001",
 		"server": "http://api.server.com:3001",
-		"imports": {},
-		"exports": {}
+		"inputs": {},
+		"outputs": {}
 	}
 
 
