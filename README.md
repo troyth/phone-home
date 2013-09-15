@@ -22,6 +22,12 @@ The `autostart.sh` file is a shell script (yet to be implemented!) that will run
 
 Once the handshake is complete, the Phone Home app looks at the `machine.json` file to see which types of sensors and actuators it needs to construct, and if it needs to initialize [Delivery.js](https://github.com/liamks/Delivery.js) for binary file transfer. Finally, when it begins to receive sensor values, it stores them in a buffer object. Depending on the frequency specified by the Louis server in the handshake, it sends the buffered values through the Web Socket and also any collected binary files with Delivery.js every Nms. The Louis server is calibrated to listen for and collect this information in a database.
 
+## Communicator
+
+The communicator is the principal object abstraction provided by Phone Home (similar to the Board object provided by Johnny-Five). It is named for the communicator in the 1982 film, E.T., which was an assembly of many sensors, actuators and displays to help E.T. phone home.
+
+![E.T.\'s communicator](http://upload.wikimedia.org/wikipedia/commons/4/4c/ET_Communicator_Cropped.jpg)
+
 
 
 ## machine.json
