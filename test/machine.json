@@ -11,14 +11,14 @@
     "photoresistor": {
       "name": "photoresistor",
       "source": "johnny-five",
+      "constructor": "Sensor",
       "payload": "serial",
       "type": "analog",
       "params": {
         "pin": "A2",
         "range": [0, 1000],
         "freq": 1000
-      },
-      
+      }
     },
     "roomcam": {
       "name": "roomcam",

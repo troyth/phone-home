@@ -3,13 +3,13 @@ module.exports = function(grunt) {
 
 	// Project configuration.
 	grunt.initConfig({
-	    pkg: grunt.file.readJSON("package.json"),
-	    nodeunit: {
-	      	tests: [
+		pkg: grunt.file.readJSON("package.json"),
+		nodeunit: {
+			tests: [
 				"test/communicator.js"
-	      	]
-	    },
-	    jshint: {
+			]
+		},
+		jshint: {
 			options: {
 				curly: true,
 				eqeqeq: true,
@@ -24,22 +24,22 @@ module.exports = function(grunt) {
 				node: true,
 				strict: false,
 				globals: {
-				  exports: true,
-				  document: true,
-				  $: true,
-				  Radar: true,
-				  WeakMap: true,
-				  window: true
+					exports: true,
+					document: true,
+					$: true,
+					Radar: true,
+					WeakMap: true,
+					window: true
 				}
 			},
 			files: {
 				src: ["Gruntfile.js", "lib/**/!(phone-home)*.js", "test/**/*.js"]
 			}
-	    },
-	    jsbeautifier: {
-	    	files: ["lib/**/*.js"],
-	    	options: {
-		        js: {
+		},
+		jsbeautifier: {
+			files: ["lib/**/*.js"],
+			options: {
+				js: {
 					braceStyle: "collapse",
 					breakChainedMethods: false,
 					e4x: false,
@@ -57,9 +57,9 @@ module.exports = function(grunt) {
 					spaceInParen: false,
 					unescapeStrings: false,
 					wrapLineLength: 0
-		        }
-		    }
-	    }
+				}
+			}
+		}
 	});//end initConfig
 
 	// Default tasks are contrib plugins
